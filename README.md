@@ -17,3 +17,4 @@ If you have any questions or concerns, please submit an issue, contact the corre
 - [:file\_folder: cibersort](/cibersort)
 - [:file\_folder: scRNA_classifer](/scRNA_classifer)
 - [:file\_folder: loupeBrowser](/loupeBrowser)
+- [:file\_folder: gsea](/gsea)
