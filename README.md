@@ -7,7 +7,7 @@ This GitHub repository contains all the analysis code used in, "A single cell at
 - enable reproducible/transparent data reporting
 - provide analysis code to reproduce custom figures
 
-If you have any questions or concerns, please submit an issue, contact the correspoining author, and/or contact Dylan Ammons at dyammons@colostate.edu.
+If you have any questions or concerns, please submit an issue, contact the correspoining author(s), and/or contact Dylan Ammons at dyammons95@gmail.com.
 
 ## File structure:
 - [:file\_folder: input](/input) contains relevent metadata files and Cell Ranger output count matrices required for a repoducible run
