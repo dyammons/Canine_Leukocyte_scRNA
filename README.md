@@ -1,6 +1,6 @@
 # Canine_Leukocyte_scRNA
 
-This GitHub repository contains all the analysis code used in, "A single cell atlas of leukocytes from healthy and osteosarcoma tumor bearing dogs." [add citation]
+This GitHub repository contains all the analysis code used in, "A single cell RNA sequencing atlas of circulating leukocytes from healthy and osteosarcoma affected dogs." [add citation]
 
 ## Repository goals: 
 - provide a resource to make the data generated from this project accessible
