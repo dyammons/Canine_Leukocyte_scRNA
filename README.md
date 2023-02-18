@@ -15,12 +15,12 @@ If you have any questions or concerns, please submit an issue, contact the corre
 
 ## Supplemental data and potential uses:
 
-1. [Cell type annotations](#cell-type-annotations-with-defining-markers)
-2. [Reference Mapping](#using-the-data-to-complete-reference-mapping)
-3. [GSEA using dataset](#gene-set-enrichment-analysis)
-4. [CIBERSORT](#cibersort)
+1. [Cell type annotations](#1-cell-type-annotations-with-defining-markers)
+2. [Reference Mapping](#2-using-the-data-to-complete-reference-mapping)
+3. [GSEA using dataset](#3-gene-set-enrichment-analysis)
+4. [CIBERSORT](#4-cibersort)
 
-### Cell type annotations with defining markers
+### 1. Cell type annotations with defining markers
 
 Cell markers lists were curated using 7 healthy canine leukocyte samples. The top 50 defining features (identified using `FindMarkers` for each cell type were considered, with the top 24 features evaluated for specificity using violin plots and preference given to unique features only found in the top 50 of one cell type.
 
@@ -107,7 +107,7 @@ Cell markers lists were curated using 7 healthy canine leukocyte samples. The to
 </p>
 </details>
 
-### Using the data to complete reference mapping
+### 2. Using the data to complete reference mapping
 Reference mapping is useful tool to faciliate the identification of cell types in single cell datasets. The apporach described here uses Seurat functions to identify anchors between a query dataset (external/personal data) and the refernce datasets generate in this study. The default approach descrubes how to use the healthy only dataset, but it will also work with the combined dataset if you load that file in as the refernce.
 
 Before running the reference mapping code, a Seurat object need to be preprocessed and stored as an object named `seu.obj`.
@@ -145,7 +145,7 @@ pi <- DimPlot(seu.obj,
 ggsave("./output/referenceMap.png", width = 7, height = 7)
 ```
 
-### Gene set enrichment analysis
+### 3. Gene set enrichment analysis
 
 These data have the potential to provide supporting evdience to evaluate cell idniey of sorted bulk RNA sequencing dataset. One apporach to do this is to use GSEA with the terms repsenting the cell type idnified in this dataset.
 
@@ -211,6 +211,6 @@ plot <- ggplot(data = cellCalls, mapping = aes_string(x = 'cluster', y = 'ID')) 
 ggsave("./output/gsea_scRNA_terms.png", width = 6, height = 4)
 ```
 
-### CIBERSORT
+### 4. CIBERSORT
 
 Under development
