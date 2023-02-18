@@ -1584,161 +1584,6 @@ vilnPlots <- function(seu.obj = NULL, inFile = NULL, groupBy = "clusterID", numO
     
 }
 
-# Cross-species hierarchical clustering.
-# Inspired by Zillonis et al. Immunity publication. 
-cross_species_dendrogram <- function(obj_1, obj_2, 
-                                     #species1.ident, 
-                                     species2.ident,
-                                     species1.res, species2.res,
-                                     species1.name, species2.name)
-{
-#   ## Set objects to compare here (seuratObject)
-#   obj_1 <- subset(species.1.obj, idents = species1.ident)
-  obj_2 <- subset(obj_2, subset = celltype.l1 ==  "Mono" | celltype.l1 == "DC" | celltype.l1 == "other")
-
-#   ### Extract metadata for cluster ids (seuratObject@meta.data)
-#   obj_1.meta <- obj_1@meta.data
-#   obj_2.meta <- obj_2@meta.data
-  
-  # Extract counts matrix
-  obj_1.cMat <- obj_1@assays$SCT@counts
-  obj_2.cMat <- obj_2@assays$SCT@counts
-  
-#   obj1.Sobj <- CreateSeuratObject(obj_1.cMat)
-#   obj2.Sobj <- CreateSeuratObject(obj_2.cMat)
-  
-#   # Find highly variable genes under the SCTransform framework
-#   obj1.Sobj <- SCTransform(obj1.Sobj)
-#   obj2.Sobj <- SCTransform(obj2.Sobj)
-  
-#   # Extact highly variable genes
-#   obj_1.genes <- VariableFeatures(obj_1)
-#   obj_2.genes <- VariableFeatures(obj_2)
-  
-    obj_1 <- FindVariableFeatures(obj_1,
-    selection.method = "vst", 
-    nfeatures = 2500)
-    
-    obj_2 <- FindVariableFeatures(obj_2,
-    selection.method = "vst", 
-    nfeatures = 2500)
-    
-  obj1.varplot <- VariableFeaturePlot(obj_1, log = T)$data
-  obj_1.genes <- rownames(obj1.varplot[obj1.varplot$colors == "yes",])
-  obj2.varplot <- VariableFeaturePlot(obj_2, log = T)$data
-  obj_2.genes <- rownames(obj2.varplot[obj2.varplot$colors == "yes",])
-    
-#   library(inflection)
-#   obj1.inf <- ese(x = 1:length(obj1.varplot[,2]), 
-#                   y = obj1.varplot[,2], 
-#                   index = 1)
-#   obj1.inf.pt <- round(length(obj1.varplot[,2]) - (length(obj1.varplot[,2]) - obj1.inf[,3])/2)
-#   obj_1.genes <- rownames(obj1.varplot)[obj1.inf.pt:length(rownames(obj1.varplot))]
-  
-#   obj2.inf <- ese(x = 1:length(obj2.varplot[,2]), 
-#                   y = obj2.varplot[,2] %>% sort(), 
-#                   index = 1)
-#   obj2.inf.pt <- round(length(obj2.varplot[,2]) - (length(obj2.varplot[,2]) - obj2.inf[,3])/2)
-#   obj_2.genes <- rownames(obj2.varplot)[obj2.inf.pt:length(rownames(obj2.varplot))]
-  
-  
-  # Intersect species hvg's to identify shared highly variable orthologs
-  orthologs <- intersect(obj_1.genes,obj_2.genes)
-  
-  # Use RelativeCounts function within Seurat to calculate TPM from counts matrix
-  obj_1.TPM <- RelativeCounts(obj_1.cMat, scale.factor = 10^6)
-  obj_2.TPM <- RelativeCounts(obj_2.cMat, scale.factor = 10^6)
-  codez <- as.data.frame(colnames(obj_2.TPM))
-  colnames(codez) <- "barcode"
-    
-  # Add some cluster meta data to cell names in the TPM matrices; will be used to identify whose 'who'
-  obj_1 <- SetIdent(obj_1, value = species1.res)
-  obj_2 <- SetIdent(obj_2, value = species2.res)
-  
-  colnames(obj_1.TPM) <- paste(colnames(obj_1.TPM), Idents(obj_1), sep = "_")
-  colnames(obj_2.TPM) <- paste(colnames(obj_2.TPM), Idents(obj_2), sep = "_")
-  codez$fullCode <- colnames(obj_2.TPM)
-  codez$cluster <- Idents(obj_2)
-    
-  # Filter matrices by highly var orthologs to make file sizes more maneagable
-#   obj_1.TPM <- obj_1.TPM[orthologs,]
-    obj_1.TPM <- obj_1.TPM[rownames(obj_1.TPM) %in% orthologs,]
-#   obj_2.TPM <- obj_2.TPM[orthologs, ]
-    obj_2.TPM <- obj_2.TPM[rownames(obj_2.TPM) %in% orthologs,]
-    
-    orthologs <- intersect(rownames(obj_1.TPM),rownames(obj_2.TPM))
-    obj_1.TPM <- obj_1.TPM[rownames(obj_1.TPM) %in% orthologs,]
-#   obj_2.TPM <- obj_2.TPM[orthologs, ]
-    obj_2.TPM <- obj_2.TPM[rownames(obj_2.TPM) %in% orthologs,]
-
-  # Convert from sparseMatrix to matrix format to work well with base R functions
-  obj_1.TPM <- as.matrix(obj_1.TPM)
-  obj_2.TPM <- as.matrix(obj_2.TPM)
-  
-  # Tidy data and calculate gene-cluster averages across all groups
-  library(reshape2)
-  obj_1.melt <- melt(obj_1.TPM)
-  colnames(obj_1.melt) <- c("gene", "cell", "count")
-  obj_1.melt$cluster <- sub(".*[0-9]_", "", obj_1.melt$cell)
-  
-  obj_2.melt <- melt(obj_2.TPM)
-  colnames(obj_2.melt) <- c("gene", "cell", "count")
-#   obj_2.melt$cluster <- strsplit(obj_2.melt$cell,"_")
-  #obj_2.melt$cluster <- sub("*_.", "*_.","", obj_2.melt$cell)
-    #sapply(strsplit(obj_2.melt$cell, "_"), "[", 2)
-   # as.data.frame(str_split(obj_2.melt$cell, pattern = "_", n = 3))[3]
-    obj_2.melt <- left_join(obj_2.melt, codez, by = c("cell" = "fullCode"))    
-  
-  library(dplyr)
-  obj_1.groupedbyClusterandGene_means <- obj_1.melt %>%
-    group_by(cluster, gene) %>%
-    summarise(mean = mean(count))
-  obj_2.groupedbyClusterandGene_means <- obj_2.melt %>%
-    group_by(cluster, gene) %>%
-    summarise(mean = mean(count))
-  
-  obj_1.groupedbyClusterandGene_means.df <- dcast(data = obj_1.groupedbyClusterandGene_means, formula = gene ~ cluster, fun.aggregate = sum, value.var = "mean")
-  rownames(obj_1.groupedbyClusterandGene_means.df) <- obj_1.groupedbyClusterandGene_means.df[, 1]
-  obj_1.groupedbyClusterandGene_means.df[, 1] <- NULL
-  
-  obj_2.groupedbyClusterandGene_means.df <- dcast(data = obj_2.groupedbyClusterandGene_means, formula = gene ~ cluster, fun.aggregate = sum, value.var = "mean")
-  rownames(obj_2.groupedbyClusterandGene_means.df) <- obj_2.groupedbyClusterandGene_means.df[, 1]
-  obj_2.groupedbyClusterandGene_means.df[, 1] <- NULL
-  
-  # Add psuedocount TPM of 50 to each matrix of mean expression
-  obj_1.groupedbyClusterandGene_means.df.p <- obj_1.groupedbyClusterandGene_means.df + 50
-  obj_2.groupedbyClusterandGene_means.df.p <- obj_2.groupedbyClusterandGene_means.df + 50
-  
-  # Calculate medians of average expression per gene
-  obj_1.median.mean <- apply(obj_1.groupedbyClusterandGene_means.df.p, MARGIN = 1, median)
-  obj_2.median.mean <- apply(obj_2.groupedbyClusterandGene_means.df.p, MARGIN = 1, median)
-  
-  # Add psuedocount TPM of 50 to each median
-#   obj_1.median.mean.p <- obj_1.median.mean + 50
-#   obj_2.median.mean.p <- obj_2.median.mean + 50
-  
-  # Perform klein transformation
-  obj_1.kleinTrans <- sweep(obj_1.groupedbyClusterandGene_means.df.p, 1, obj_1.median.mean, "/")
-  obj_2.kleinTrans <- sweep(obj_2.groupedbyClusterandGene_means.df.p, 1, obj_2.median.mean, "/")
-  
-  ## Append species identifier to column names
-  colnames(obj_1.kleinTrans) <- paste(obj_1.species, colnames(obj_1.kleinTrans), sep = "_")
-  colnames(obj_2.kleinTrans) <- paste(obj_2.species, colnames(obj_2.kleinTrans), sep = "_")
-  
-  # Combine matrices via bind columns(species clusters)
-  merged.obj <- cbind(obj_1.kleinTrans, obj_2.kleinTrans)
-  
-  # Perform log transformation(natural)
-  merged.obj.log1p <- log1p(merged.obj)
-  
-  # Calculate pearson distance metrices
-  pearson.dist.df <- as.dist((1 - cor(merged.obj.log1p)) / 2)
-  
-  # Run hclust and visualize dendogram
-  dendo <- hclust(pearson.dist.df, method = "ward.D2")
-  return(dendo)
-}
-
 ############ singleR ############
 
 singleR <- function(seu.obj = NULL, outName = "", clusters = "clusterID", outDir = ""
@@ -1746,19 +1591,12 @@ singleR <- function(seu.obj = NULL, outName = "", clusters = "clusterID", outDir
     
     cntData <- GetAssayData(seu.obj, slot = "data", assay = "RNA")
     Kotliarov <- scRNAseq::KotliarovPBMCData()
-    refs <- list(#human_ref1 = celldex::HumanPrimaryCellAtlasData(), 
-                 #human_ref2 = BlueprintEncodeData(),
-                 #human_ref3 = DatabaseImmuneCellExpressionData(),
-                 #human_ref4 = NovershternHematopoieticData(), 
-                 #human_ref5 = MonacoImmuneData(),
-                 #human_ref6 = logNormCounts(scRNAseq::MairPBMCData(), librarySizeFactors(scRNAseq::MairPBMCData()))#,
-                 human_ref7 = logNormCounts(Kotliarov)#,
-                 #human_ref8 = logNormCounts(scRNAseq::StoeckiusHashingData(mode='human'))                
-                 #mouse_ref1 = ImmGenData() #this thing is a piece of shit lol
-                
-                )
-    #human_ref7 = logNormCounts(scRNAseq::KotliarovPBMCData(ensembl=TRUE))
-    
+    refs <- list(human_ref1 = celldex::HumanPrimaryCellAtlasData(), 
+                 human_ref2 = BlueprintEncodeData(),
+                 human_ref3 = DatabaseImmuneCellExpressionData(),
+                 human_ref4 = NovershternHematopoieticData(), 
+                 human_ref5 = MonacoImmuneData()
+                )   
     
     #Perform annotation using each reference
     sapply(names(refs), FUN = function(ref_idx) {
@@ -2206,7 +2044,8 @@ createCYBRsort <- function(seu.obj = NULL, groupBy = NULL, downSample = F, outDi
     write.csv(pbj, file = outfile)
     
 }
-                                           
+                     
+############ create sankey plot ############
 sankeyPlot <- function(seu_obj = NULL, new.ident = NULL, old.ident = "clusterID", old.colorz = NULL,
                        new.colorz = NULL, old.labCol = NULL, new.labCol = NULL, flowCol = "grey"
                     ){
@@ -2257,7 +2096,7 @@ sankeyPlot <- function(seu_obj = NULL, new.ident = NULL, old.ident = "clusterID"
     return(p)
 }
 
-                                           
+############ create dotplot split out by type of feature ############
 dotPlotBY_TYPE <- function(seu_obj = NULL, pwdTOvilnCSVoutput = NULL, groupBy = NULL, namedCols = NULL, database = "clfamiliaris_gene_ensembl", exlcude = "", boxColor = "black"
                           ){
     
