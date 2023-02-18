@@ -1,6 +1,39 @@
-### Cell type annotations with defining features
+### Cell type annotations with defining markers
 
-<details><summary>cellType.l3</summary>
+Cell markers lists were curated using 7 healthy canine leukocyte samples. The top 50 defining features (identified using `FindMarkers` for each cell type were considered, with the top 24 features evaluated for specificity using violin plots and preference given to unique features only found in the top 50 of one cell type.
+
+<details><summary>cellType.l1</summary>
+<p>
+  
+|Cell Type         |Marker                                                             |
+|------------------|-------------------------------------------------------------------|
+|CD8/NK cell       |CCL5, GZMB, KLRB1, NCR3, GZMA, IL12RB2, TRPM3, KLRK1, KLRD1, CD96  |
+|CD4 T cell        |IL7R, LEF1, DOCK3, ATP10A, CD52, CSTA, ICOS, CD3E                  |
+|Monocyte          |LYZ, MAFB, BPI, FN1, F13A1, TCF7L2, S100P, CD83, NRG1, PLXDC2, MITF|
+|Dendritic Cell    |IGF1, NCAM2, FLT3, RAB3C, FCER1A, FGF12, NRXN1, TLR3               |
+|Neutrophil        |S100A12, CYP4F22, RGS2, CD4, ALDH1A2, SGK1, IL1R2                  |
+|Granulocyte       |DACH1, TGM2, ADGRE2, CA8, SMPD1, IL5RA                             |
+|B cell            |TNFRSF13C, PAX5, EBF1, BTLA, HTR1F, NRIP1, MS4A1, DLA-DRA          |
+|Plasma cell       |JCHAIN, TXNDC5, IRF4, TNFRSF17, DERL3, CCR10, MPP6, TNFRSF13B      |
+|DN T cell         |KANK1, TMEM132D, NMB, SYNJ2, GZMK, LEF1                            |
+|gd T cell         |PDE11A, PSD3, RHEX, IL17RB, CDH4, GATA3, FAT1, ZNF683              |
+|Cycling T cell    |TOP2A, MKI67, RRM2, H1-5, DIAPH3, TK1, KIF11, TPX2                 |
+|CD34+ Unclassified|ZNF521, CD34, KIT, CD109, IGF2BP2                                  |
+  
+</p>
+</details>
+
+<details><summary>cellType.l2</summary>
+<p>
+
+|Cell Type         |Marker                                                             |
+|------------------|-------------------------------------------------------------------|
+|TBD      |TBD  |
+
+</p>
+</details>
+
+<details open><summary>cellType.l3 (Default)</summary>
 <p>
 
 |Cell Type     |                       |Marker                                                                   |
