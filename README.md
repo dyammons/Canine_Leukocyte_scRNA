@@ -14,6 +14,12 @@ If you have any questions or concerns, please submit an issue, contact the corre
 - [:file\_folder: analysis](/analysis) contains the analysis code and source file used to compelte the data analysis
 
 ## Supplemental data and potential uses:
+
+1. [Cell type annotations](#cell-type-annotations-with-defining-markers)
+2. [Reference Mapping](#using-the-data-to-complete-reference-mapping)
+3. [GSEA using dataset](#gene-set-enrichment-analysis)
+4. [CIBERSORT](#cibersort)
+
 ### Cell type annotations with defining markers
 
 Cell markers lists were curated using 7 healthy canine leukocyte samples. The top 50 defining features (identified using `FindMarkers` for each cell type were considered, with the top 24 features evaluated for specificity using violin plots and preference given to unique features only found in the top 50 of one cell type.
@@ -205,5 +211,6 @@ plot <- ggplot(data = cellCalls, mapping = aes_string(x = 'cluster', y = 'ID')) 
 ggsave("./output/gsea_scRNA_terms.png", width = 6, height = 4)
 ```
 
-### Cibersort
+### CIBERSORT
 
+Under development
