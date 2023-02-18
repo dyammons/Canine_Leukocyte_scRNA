@@ -15,6 +15,6 @@ If you have any questions or concerns, please submit an issue, contact the corre
 
 ## Potential uses:
 - [:file\_folder: cibersort](/cibersort)
-- [:file\_folder: scRNA_classifer](/scRNA_classifer)
+- [:file\_folder: scRNA_referenceMap](/scRNA_referenceMap)
 - [:file\_folder: loupeBrowser](/loupeBrowser)
 - [:file\_folder: gsea](/gsea)
