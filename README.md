@@ -215,6 +215,7 @@ ggsave("./output/gsea_scRNA_terms.png", width = 6, height = 4)
 
 ### 4. Module scoring
 
+```r
 ref.df <- read.csv("/pl/active/dow_lab/dylan/k9_PBMC_scRNA/analysis/output/viln_finalID_H_cell.l3/H_cell.l3_gene_list.csv", row.names = 1, header = T)
 
 datas <- ref.df[,c("cluster","gene")]
@@ -241,6 +242,7 @@ ecScores <- majorDot(seu.obj = seu.obj, groupBy = "clusterID_sub", scale = T,
                              ) + guides(color = guide_colorbar(title = 'Scaled\nenrichment\nscore')) + guides(size = guide_legend(nrow = 3, byrow = F, title = 'Percent\nenriched'))
 
 ggsave(paste("./output/", outName, "/", outName, "_dots_drugTargs.png", sep = ""),width = 10,height=6)
+```
 
 ### 5. CIBERSORT
 
