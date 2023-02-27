@@ -19,7 +19,8 @@ If you have any questions or concerns, please submit an issue, contact the corre
 1. [Cell type annotations](#1-cell-type-annotations-with-defining-markers)
 2. [Reference Mapping](#2-using-the-data-to-complete-reference-mapping)
 3. [GSEA using dataset](#3-gene-set-enrichment-analysis)
-4. [CIBERSORT](#4-cibersort)
+4. [Module scoring](#4-module-scoring)
+5. [CIBERSORT](#4-cibersort)
 
 ### 1. Cell type annotations with defining markers
 
@@ -212,6 +213,35 @@ plot <- ggplot(data = cellCalls, mapping = aes_string(x = 'cluster', y = 'ID')) 
 ggsave("./output/gsea_scRNA_terms.png", width = 6, height = 4)
 ```
 
-### 4. CIBERSORT
+### 4. Module scoring
+
+ref.df <- read.csv("/pl/active/dow_lab/dylan/k9_PBMC_scRNA/analysis/output/viln_finalID_H_cell.l3/H_cell.l3_gene_list.csv", row.names = 1, header = T)
+
+datas <- ref.df[,c("cluster","gene")]
+colnames(datas) <- c("gs_name", "gene_symbol")
+datas <- datas %>% group_by(gs_name) %>% top_n(10) %>% dplyr::distinct(gene_symbol) %>% as.data.frame()
+
+modulez <- split(datas$gene_symbol, datas$gs_name)
+
+seu.obj <- AddModuleScore(seu.obj,
+                          features = modulez,
+                         name = "_score")
+
+names(seu.obj@meta.data)[grep("_score", names(seu.obj@meta.data))] <- names(modulez)
+
+features <- names(modulez)
+ecScores <- majorDot(seu.obj = seu.obj, groupBy = "clusterID_sub", scale = T,
+                     features = features
+                    ) + theme(axis.title = element_blank(),
+                              #axis.ticks = element_blank(),
+                              #legend.justification = "left",
+                              #plot.margin = margin(7, 21, 7, 7, "pt")
+                              legend.direction = "vertical",
+                              legend.position = "right"
+                             ) + guides(color = guide_colorbar(title = 'Scaled\nenrichment\nscore')) + guides(size = guide_legend(nrow = 3, byrow = F, title = 'Percent\nenriched'))
+
+ggsave(paste("./output/", outName, "/", outName, "_dots_drugTargs.png", sep = ""),width = 10,height=6)
+
+### 5. CIBERSORT
 
 Under development
