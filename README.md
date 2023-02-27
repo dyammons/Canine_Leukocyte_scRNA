@@ -2,6 +2,7 @@
 
 This GitHub repository contains all the analysis code used in, "A single cell RNA sequencing atlas of circulating leukocytes from healthy and osteosarcoma affected dogs." [add citation]
 
+NOTE: to be finalized by time of publication (excuse current typos)
 ## Repository goals: 
 - provide a resource to make the data generated from this project accessible
 - enable reproducible/transparent data reporting
