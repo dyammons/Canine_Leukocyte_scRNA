@@ -1,11 +1,11 @@
 For a repducible run the count matrices can be obtained from ncbi GEO using:
 
 ```sh
-wget
+wget https://ftp.ncbi.nlm.nih.gov/geo/series/GSE218nnn/GSE225nnn/suppl/GSE225599_RAW.tar
 ```
 Then upacked with:
 ```sh
-tar -xvf GSE225599_RAW.tar
+tar -xf GSE225599_RAW.tar
 ```
 
 To reaggrange the file structure for easy loading into R the following bash script is provided:
