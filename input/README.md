@@ -25,3 +25,10 @@ do
 
 done < deCoder.tsv
 ```
+
+
+The raw fastq files obtained from SRA using:
+```sh
+prefetch -v SRR------
+fastq-dump --outdir [dst] --split-files [dest]
+```
