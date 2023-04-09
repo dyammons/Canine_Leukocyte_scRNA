@@ -29,6 +29,6 @@ done < deCoder.tsv
 
 The raw fastq files obtained from SRA using:
 ```sh
-prefetch -v SRR------
+prefetch -v -max-size=35000000 SRR------
 fastq-dump --outdir [dst] --split-files [dest]
 ```
