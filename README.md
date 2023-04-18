@@ -50,9 +50,29 @@ Cell markers lists were curated using 7 healthy canine leukocyte samples. The to
 <details><summary>cellType.l2</summary>
 <p>
 
-|Cell Type         |Marker                                                             |
-|------------------|-------------------------------------------------------------------|
-|TBD      |TBD  |
+|Cell Type         |Marker                                                              |
+|------------------|--------------------------------------------------------------------|
+|B cell            |TNFRSF13C, PAX5, BANK1, EBF1, BTLA, PLEKHO1, HTR1F, NRIP1           |
+|Basophil          |SLCO4C1, IL5RA, DAPK2, DACH1, CA8, ADGRE2, EEPD1, ANKRD33B, HK2     |
+|CD34+ Unclassified|CD34, NDST3, TFPI, CLEC3B, KIT, NAV3, CD109                         |
+|CD4+ Naive        |ATP10A, RGS10, LEF1, CTPS1, ZNF536, SATB1, CSTA, ITGA1, COL6A5      |
+|CD4+ T reg        |IKZF2, S100A5, CTLA4, GATA3, IL2RA, TOX, CD80, ZNF831               |
+|CD4+ TCM          |LEF1, CCR7, TSHZ2, LTB, CD52, CSTA, IL7R, TCF7                      |
+|CD4+ TEM          |IL7R, RORA, PLCL1, MAF, SLC9A9, ICOS, GALNT17, PTPN13, DOCK3        |
+|CD8 T cell        |CCL5, GZMB, TRPM3, KLRK1, KLRB1, CCL4, IL2RB, KLRD1, CD96           |
+|CD8+ Memory       |GZMK, KLRK1, GZMB, KLRB1, KLRD1, KLRG1, CD8A, FASLG, CCR5           |
+|DC                |PKIB, TCF4, FLT3, HAVCR1, SDC2, NCAM2, MRC1, IGF1, FCER1A           |
+|DN T cell         |KIAA0825, TMEM132D, NMB, SYNJ2, GZMK, MYB, KANK1, PLCL1, SLF1, CTLA4|
+|Eosinophil        |CSTB, SLCO4C1, TGM2, ADGRE2, C30H15orf48, PTPRN2, SMPD1, CA8        |
+|M-MDSC            |IL18, IL1B, MEFV, CPXM2, LTF, CYP4F22, STEAP4, KCNJ2, S100A12       |
+|Monocyte          |ARHGAP45, F13A1, CD83, FN1, LYZ, NRG1, RETN, SLAMF9, TCF7L2         |
+|NK T cell         |TGFBR3, GPA33, RARRES1, IL2RB, IKZF2, KLRK1, CD96                   |
+|NK cell           |GZMA, PI3, IL2RB, KLRF1, PTPRM, PAX4, CD96, IGSF3, STMN2, F2RL3     |
+|Neutrophil        |CYP4F22, S100A12, CD4, SOD2, SERPINA1, IL1R2, ALDH1A2, S100A8       |
+|Other T cell      |RRM2, MKI67, SPC24, TK1, CENPF, TOP2A, CLSPN, NCAPG                 |
+|PMN-MDSC          |PGLYRP1, CAMP, MMP9, CRISP2, TCN1, MMP8, CD177, FADS1, LTF, S100A12 |
+|Plasma cell       |MZB1, JCHAIN, LMAN1, TXNDC5, LAP3, IRF4, RARRES2, TNFRSF17          |
+|gd T cell         |PDE11A, PSD3, CRLF2, IL17RB, VSTM4, RHEX, FAT1, TOX2                |
 
 </p>
 </details>
