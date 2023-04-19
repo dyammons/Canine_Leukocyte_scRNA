@@ -20,7 +20,7 @@ If you have any questions or concerns, please submit an issue, contact the corre
 2. [Reference Mapping](#2-using-the-data-to-complete-reference-mapping)
 3. [GSEA using dataset](#3-gene-set-enrichment-analysis)
 4. [Module scoring](#4-module-scoring)
-5. [CIBERSORT](#4-cibersort)
+5. [CIBERSORTx](#5-cibersortx)
 
 ### 1. Cell type annotations with defining markers
 
@@ -278,21 +278,22 @@ ecScores <- majorDot(seu.obj = seu.obj, groupBy = "clusterID_sub", scale = T,
 ggsave(paste("./output/", outName, "/", outName, "_dots_drugTargs.png", sep = ""),width = 10,height=6)
 ```
 
-### 5. CIBERSORT
+### 5. CIBERSORTx
 
 Under development
 
-The reference dataset generated from this study provides the data required to make a comprehensive cibersort reference to be used for deconvolution of bulk RNA sequencing of peripheral blood. We do not feel comfortable providing a reference that can be directly used, as this study did not benchmark cibersort references.
+The reference dataset generated from this study provides the data required to make a comprehensive CIBERSORTx reference to be used for deconvolution of bulk RNA sequencing of peripheral blood. We do not feel comfortable providing a reference that can be directly used, as this study did not benchmark CIBERSORTx references.
 
-We have plans to complete futher work up and release references at a later date.
+We have plans to complete futher work up and release references at a later date. They will be linked here when available.
 
-In the meantime, feel free to generate your own cibersort reference using this dataset. Please cite this publication if using the dataset to generate a cibersort reference. Also, I would recommend completing validation of the refernce before applying it to your system.
+In the meantime, feel free to generate your own cibersort references using this dataset. Please cite this publication if using the dataset to generate a CIBERSORTx reference. Also, I would recommend completing validation studies to evaluate the performance of the reference before applying it to your system.
 
-With the being said here is the code I would use to prepare out dataset for cibersort refernece generation:
+With the being said here is the code I would use to prepare our dataset for CIBERSORTx reference generation:
 
 ```
 ##### create input ref for cibersort #####
-#load in processed data from GEO -- see input dir for instructions
+#load in processed data from GEO -- see input dir for instructions (healthy only will do, but could used combined dataset if desired
+#NOTE: it may work better if only using 1 dog to generate the reference, but the code here does not do that)
 seu.obj.h <- readRDS(file = "./output/s3/final_dataSet_H.rds")
 
 #randomly downsample the subset data to obtain equal number of cells in each celltype
