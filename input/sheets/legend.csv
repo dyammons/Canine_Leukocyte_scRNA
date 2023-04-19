@@ -1,0 +1,24 @@
+"","clusterID_sub","majorID_sub","colour","labCol","cd4class","title","leg_x","leg_y"
+"1","0","Monocyte, CD4-","#FFAA93","black","other","Monocyte",0.5,21
+"2","2","Monocyte, CD4-","#F6B31E","black","other","Monocyte",0.5,20
+"3","3","Monocyte, CD4+","#EC5C00","black","other","Monocyte",0.5,19
+"4","4","Monocyte, CD4-","#F49900","black","other","Monocyte",0.5,18
+"5","6","Monocyte, CD4-","#F8C964","black","other","Monocyte",0.5,17
+"6","8","Monocyte, CD4+","#FDEDAC","black","CD4+Mono","Monocyte",0.97,21
+"7","10","Monocyte, IFN signature","#FF755F","black","other","Monocyte",0.97,20
+"8","11","Monocyte, CD4-","#DD3900","black","other","Monocyte",0.97,19
+"9","13","M-MDSC","#F17D00","black","CD4+Mono","Monocyte",0.97,18
+"10","1","Neutrophil","#EEA4BE","black","other","Neutrophil",1.6,21
+"11","7","Neutrophil","#933C81","white","other","Neutrophil",1.6,20
+"12","9","Neutrophil","#D87FAB","black","other","Neutrophil",1.6,19
+"13","12","PMN-MDSC","pink","black","other","Neutrophil",1.6,18
+"14","20","Neutrophil","#F3CAD2","black","other","Neutrophil",1.6,17
+"15","5","Eosinophil","#009DA5","black","CD4+Mono","Granulocyte",2.05,21
+"16","15","Eosinophil","#82E6AE","black","other","Granulocyte",2.05,20
+"17","16","Basophil","#AF615B","black","other","Granulocyte",2.05,19
+"18","100","","grey",NA,"other","Low quality",2.05,17
+"19","14","Myeloid cDC2","#6D0026","white","other","Dendritic cell",2.55,21
+"20","17","Plasmacytoid DC","#C12000","white","other","Dendritic cell",2.55,20
+"21","18","Pre-DC","#7D0025","white","other","Dendritic cell",2.55,19
+"22","19","Unclassified DC","#AC0535","white","other","Dendritic cell",2.55,18
+"23","21","Myeloid cDC1","#A0060A","white","other","Dendritic cell",2.55,17

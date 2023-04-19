@@ -1,0 +1,6 @@
+"","title","n","pos","cum_sum","dfNum","header_x","header_y"
+"1","Monocyte",9,10,10,1,0.5,22
+"2","Neutrophil",5,6,16,11,1.6,22
+"3","Granulocyte",3,4,20,17,2.05,22
+"4","Low quality",1,2,22,21,2.05,18
+"5","Dendritic cell",5,6,28,23,2.55,22
