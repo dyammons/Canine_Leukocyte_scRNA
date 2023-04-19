@@ -282,14 +282,36 @@ ggsave(paste("./output/", outName, "/", outName, "_dots_drugTargs.png", sep = ""
 
 Under development
 
-The reference dataset generated from this study provides the data required to make a comprehensive cibersort reference to be used for deconvolution of bulk RNA sequencing of peripheral blood.
+The reference dataset generated from this study provides the data required to make a comprehensive cibersort reference to be used for deconvolution of bulk RNA sequencing of peripheral blood. We do not feel comfortable providing a reference that can be directly used, as this study did not benchmark cibersort references.
 
-Two levels of references have been curated and evaluated for use with deconvolution of canine PBMC bulk samples
+We have plans to complete futher work up and release references at a later date.
 
-Reference 1: can8
-Reference 2: can16
+In the meantime, feel free to generate your own cibersort reference using this dataset. Please cite this publication if using the dataset to generate a cibersort reference. Also, I would recommend completing validation of the refernce before applying it to your system.
 
-The code used to generate the code can be found at....
+With the being said here is the code I would use to prepare out dataset for cibersort refernece generation:
+
+```
+##### create input ref for cibersort #####
+#load in processed data from GEO -- see input dir for instructions
+seu.obj.h <- readRDS(file = "./output/s3/final_dataSet_H.rds")
+
+#randomly downsample the subset data to obtain equal number of cells in each celltype
+set.seed(12)
+seu.obj.h <- subset(x = seu.obj.h, downsample = min(table(seu.obj.h$celltype.l1))) #can pull any of the 3 celltype metadata slots
+seu.obj.h <- NormalizeData(seu.obj.h)
+
+#extract necessary data
+rownameCode <- as.data.frame(seu.obj.h$celltype.l1)
+cntMatrix <- seu.obj.h@assays$RNA@data
+colnames(rownameCode)[1] <- "name"
+colnames(cntMatrix) <- rownameCode$name[match(colnames(cntMatrix), rownames(rownameCode))]
+cntMatrix <- as.data.frame(cntMatrix)
+cntMatrix$gene <- rownames(cntMatrix)
+cntMatrix <- cntMatrix %>% relocate(gene)
+
+#save the matrix in the format required for cibersort -- follow instructions at https://cibersortx.stanford.edu/
+write.table(cntMatrix, file="./output/ciberSort/cibersort_forRef_ds.txt", row.names = F, col.names = T, quote=FALSE, sep='\t')
+```
 
 
 
