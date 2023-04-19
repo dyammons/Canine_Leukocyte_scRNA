@@ -11,7 +11,7 @@ NOTE: to be finalized by time of publication (excuse current typos)
 If you have any questions or concerns, please submit an issue, contact the corresponding author(s), and/or contact Dylan Ammons at dylan.ammons @ colostate dot edu.
 
 ## File structure:
-- [:file\_folder: input](/input) contains relevant metadata files and Cell Ranger output count matrices required for a reproducible run
+- [:file\_folder: input](/input) contains relevant metadata files and instructions for obtaining data associated with this study
 - [:file\_folder: analysis](/analysis) contains the analysis code and source file used to complete the data analysis
 
 ## Supplemental data and potential uses:
