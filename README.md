@@ -15,14 +15,23 @@ If you have any questions or concerns, please submit an issue, contact the corre
 - [:file\_folder: analysis](/analysis) contains the analysis code and source file used to complete the data analysis
 
 ## Supplemental data and potential uses:
+1. [Browse the data](#1-browse-the-complete-annotated-dataset)
+2. [Cell type annotations](#2-cell-type-annotations-with-defining-markers)
+3. [Reference Mapping](#3-using-the-data-to-complete-reference-mapping)
+4. [GSEA using dataset](#4-gene-set-enrichment-analysis)
+5. [Module scoring](#5-module-scoring)
+6. [CIBERSORTx](#6-cibersortx)
 
-1. [Cell type annotations](#1-cell-type-annotations-with-defining-markers)
-2. [Reference Mapping](#2-using-the-data-to-complete-reference-mapping)
-3. [GSEA using dataset](#3-gene-set-enrichment-analysis)
-4. [Module scoring](#4-module-scoring)
-5. [CIBERSORTx](#5-cibersortx)
+### 1. Browse the complete annotated dataset
 
-### 1. Cell type annotations with defining markers
+The proccessed dataset is avaliable for browsing via the UCSC Cell Browser portal.
+Using the portal you can exlore feature expression throughout the data as well as obtain the transcriptomic signatures of each cell type though an interactive webpage.
+
+Link to the dataset: http://cells.ucsc.edu
+
+Link to UCSC Cell Browser documentation: https://cellbrowser.readthedocs.io/en/master/
+
+### 2. Cell type annotations with defining markers
 
 Cell markers lists were curated using 7 healthy canine leukocyte samples. The top 50 defining features (identified using `FindMarkers` for each cell type were considered, with the top 24 features evaluated for specificity using violin plots and preference given to unique features only found in the top 50 of one cell type.
 
@@ -136,7 +145,7 @@ Cell markers lists were curated using 7 healthy canine leukocyte samples. The to
 </p>
 </details>
 
-### 2. Using the data to complete reference mapping
+### 3. Using the data to complete reference mapping
 Reference mapping is useful tool to facilitate the identification of cell types in single cell datasets. The approach described here uses Seurat functions to identify anchors between a query dataset (external/personal data) and the reference datasets generated in this study. The default approach describes how to use the healthy only dataset, but it will also work with the combined dataset if you load that file in as the reference.
 
 Before running the reference mapping code, a Seurat object need to be preprocessed and stored as an object named `seu.obj`.
@@ -174,7 +183,7 @@ pi <- DimPlot(seu.obj,
 ggsave("./output/referenceMap.png", width = 7, height = 7)
 ```
 
-### 3. Gene set enrichment analysis
+### 4. Gene set enrichment analysis
 
 The data generated from this work have the potential to provide supporting evidence to evaluate/confirm the cell identity of sorted bulk RNA sequencing dataset. One approach to do this is to use gene set enrichment analysis (GSEA) with the terms representing the cell type identified in our dataset.
 
@@ -241,7 +250,7 @@ plot <- ggplot(data = cellCalls, mapping = aes_string(x = 'cluster', y = 'ID')) 
 ggsave("./output/gsea_scRNA_terms.png", width = 6, height = 4)
 ```
 
-### 4. Module scoring
+### 5. Module scoring
 Module scoring is a supplemental approach that can be applied to single cell datasets with the goal of providing further insights into cell identities. The approach described below uses the Seurat function  AddModuleScore() and the gene lists presented in Table 3 of our associated manuscript. The concept of the AddModuleScore() function is similar to GSEA, but also distinct in many ways. Read the [Seurat documentation](https://satijalab.org/seurat/reference/addmodulescore) and/or check out [this webpage](https://www.waltermuskovic.com/2021/04/15/seurat-s-addmodulescore-function/).
 
 ```r
@@ -278,7 +287,7 @@ ecScores <- majorDot(seu.obj = seu.obj, groupBy = "clusterID_sub", scale = T,
 ggsave(paste("./output/", outName, "/", outName, "_dots_drugTargs.png", sep = ""),width = 10,height=6)
 ```
 
-### 5. CIBERSORTx
+### 6. CIBERSORTx
 
 Under development
 
