@@ -1,26 +1,20 @@
 # Analysis code overview
 ### To complete a reproducible run from raw data:
 Retrieve the fastq files from SRA and then align to the canine genome. 
-Instructions to download the fastq files can be found in [:file\_folder: input](/input).
-
+Instructions to download the fastq files can be found in [:file\_folder: input](/input). 
 The alignment code is currently not provided, but can be shared if desired. Just email the corresponding authors to request.
 
 ### To complete a reproducible run from cellranger output count matricies:
 Download the supplementary zip folder on the NCBI GEO project page as decribed in [:file\_folder: input](/input) directory.
-
 In addition to the count matrices you will also need the .csv files located in the [:file\_folder: sheets](/input/sheets) directory.
-
 Once all files are in place, you will need the [runScript_pbmc.R](/analysis/runScript_pbmc.R) which contains the analysis code and you will have to source the [customFunctions.R](/analysis/customFunctions.R).
 
-NOTE: the file paths in `runScript_pbmc.R` files will likely need to be modified when loading/saving data to run on your system.
+NOTE: the file paths in `runScript_pbmc.R` will likely need to be modified when reading/writing data to run on your system.
 
 ### To reproduce/explore data using processed data:
 Download the supplementary .rds file on the NCBI GEO project page as described in [:file\_folder: input](/input) directory.
-
 There is an .rds file for just the healthy dogs, combined dataset, and a file for each major immune cell subset.
-
 These files can be loaded into [runScript_pbmc.R](/analysis/runScript_pbmc.R) to bypass some of the more computationally intense steps, or they can be used for your own exploration!
-
 
 ### Envrionement to reproduce:
 This work was completed on the UC boulder Alpine supercomputer on a Linux operating system. All code was run in a conda environment and I am happy to share the .yml file upon request.
