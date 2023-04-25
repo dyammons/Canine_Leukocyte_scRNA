@@ -19,14 +19,16 @@ while read line
 do
     old=$(echo "$line" | cut -f1)
     new=$(echo "$line" | cut -f2)
+    
+    mkdir $new
+    
+    barcodes="./$new\_barcodes.tsv.gz"
+    feats="./$new\_features.tsv.gz"
+    mtx="./$new\_matrix.mtx.gz"
 
-    barcodes="./$old/barcodes.tsv.gz"
-    feats="./$old/features.tsv.gz"
-    mtx="./$old/matrix.mtx.gz"
-
-    cp $barcodes ./forGEO_2/$new\_barcodes.tsv.gz
-    cp $feats ./forGEO_2/$new\_features.tsv.gz
-    cp $mtx ./forGEO_2/$new\_matrix.mtx.gz
+    mv $barcodes ./$old/$old\_barcodes.tsv.gz
+    mv $feats ./$old/$old\_features.tsv.gz
+    mv $mtx ./$old/$old\_matrix.mtx.gz
 
 done < deCoder.tsv
 ```
