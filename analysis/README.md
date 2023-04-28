@@ -2,7 +2,7 @@
 ### To complete a reproducible run from raw data:
 Retrieve the fastq files from SRA and then align to the canine genome. 
 Instructions to download the fastq files can be found in [:file\_folder: input](/input). 
-The alignment code is currently not provided, but can be shared if desired. Just email the corresponding authors to request.
+The alignment code is currently not provided, but can be shared if desired. If you want it, you can request through GitHub.
 
 ### To complete a reproducible run from cellranger output count matricies:
 Download the supplementary zip folder on the NCBI GEO project page as decribed in [:file\_folder: input](/input) directory.
