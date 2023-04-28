@@ -1,8 +1,11 @@
 # Canine_Leukocyte_scRNA
 
-This GitHub repository contains all the analysis code used in, "A single cell RNA sequencing atlas of circulating leukocytes from healthy and osteosarcoma affected dogs." [add citation]
+This GitHub repository contains all the analysis code used in, "A single cell RNA sequencing atlas of circulating leukocytes from healthy and osteosarcoma affected dogs."
 
-NOTE: to be finalized by time of publication (excuse current typos)
+If you use our raw/processed data, extract data using the UCSC Cell Browser portal, or use portions of our code in your analayis, please cite:
+> Ammons DT, Harris RA, Hopkins LS, Kurihara J, Weishaar K and Dow S (2023) A single-cell RNA sequencing atlas of circulating leukocytes from healthy and
+osteosarcoma affected dogs. Front. Immunol. 14:1162700. doi: 10.3389/fimmu.2023.1162700
+
 ## Repository goals: 
 - provide a resource to make the data generated from this project accessible
 - enable reproducible/transparent data reporting
@@ -25,7 +28,7 @@ If you have any questions or concerns, please submit an issue, contact the corre
 ### 1. Browse the complete annotated dataset
 
 The proccessed dataset is avaliable for browsing via the UCSC Cell Browser portal.
-Using the portal you can exlore feature expression throughout the data as well as obtain the transcriptomic signatures of each cell type though an interactive webpage.
+Using the portal you can exlore feature expression throughout the dataset as well as obtain the transcriptomic signatures of each cell type though an interactive webpage.
 
 Link to the dataset: https://canine-leukocyte-atlas.cells.ucsc.edu
 
