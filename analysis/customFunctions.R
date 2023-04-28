@@ -605,7 +605,7 @@ indReClus <- function(seu.obj = NULL, group.by = NULL, sub = NULL, outDir = "", 
 }
 
 ############ prettyFeats ############
-prettyFeats <- function(seu.obj = NULL, nrow = 3, ncol = NULL, features = "", color = "black", order = FALSE, titles = NULL, noLegend = F, bottomLeg = F, min.cutoff = NA, pt.size = NULL, title.size = 18
+prettyFeats <- function(seu.obj = NULL, nrow = 3, ncol = NULL, features = "", color = "black", order = FALSE, titles = NULL, noLegend = F, bottomLeg = F, min.cutoff = NA, pt.size = NULL, title.size = 18, legJust = "bottom"
                        ) {
     
     DefaultAssay(seu.obj) <- "RNA"
@@ -682,7 +682,8 @@ prettyFeats <- function(seu.obj = NULL, nrow = 3, ncol = NULL, features = "", co
     
     if(!noLegend){
         if(!bottomLeg){
-            patch <- append(patch, area(t = ceiling(length(features)/ncol), l = ncol+1, b = ceiling(length(features)/ncol), r = ncol+1))
+            legPos <- ifelse(legJust == "bottom",ceiling(length(features)/ncol),1)
+            patch <- append(patch, area(t = legPos, l = ncol+1, b = legPos, r = ncol+1))
         }else{
             patch <- append(patch, area(t = ceiling(length(features)/ncol)+1, l = ncol, b = ceiling(length(features)/ncol)+1, r = ncol))
         }
