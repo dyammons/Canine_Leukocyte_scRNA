@@ -13,8 +13,16 @@ tar -xf GSE225599_RAW.tar
 (Or, right click and extract all)
 
 
-To reaggrange the file structure for easy loading into R the following bash script is provided:
+To rearrange the file structure for easy loading into Seurat following the code chunks below (Alternatively, manually rearrange):
+
 ```sh
+touch rearrange.sh
+```
+
+Then copy the conents of the below script into the rearrange.sh file
+```sh
+#!/usr/bin/env bash
+
 while read line
 do
     old=$(echo "$line" | cut -f1)
@@ -22,18 +30,21 @@ do
     
     mkdir $new
     
-    barcodes="./$new\_barcodes.tsv.gz"
-    feats="./$new\_features.tsv.gz"
-    mtx="./$new\_matrix.mtx.gz"
+    barcodes="./${old}_barcodes.tsv.gz"
+    feats="./${old}_features.tsv.gz"
+    mtx="./${old}_matrix.mtx.gz"
 
-    mv $barcodes ./$old/$old\_barcodes.tsv.gz
-    mv $feats ./$old/$old\_features.tsv.gz
-    mv $mtx ./$old/$old\_matrix.mtx.gz
+    mv $barcodes ./$new/$new\_barcodes.tsv.gz
+    mv $feats ./$new/$new\_features.tsv.gz
+    mv $mtx ./$new/$new\_matrix.mtx.gz
 
 done < deCoder.tsv
 ```
-(Alternatively, manually rearrange)
 
+After transfering the code, run:
+```sh
+bash rearrange.sh
+```
 
 From there you can follow the runScript_PBMC_analysis.R script
 
