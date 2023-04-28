@@ -25,7 +25,7 @@ source("/pl/active/dow_lab/dylan/repos/K9-PBMC-scRNAseq/analysisCode/customFunct
 
     #pal_feats <- rownames(pal_1)[rownames(pal_1) %in% rownames(pal_2)[!grepl("^MT-|^RPS|^RPL",rownames(pal_2))]]
 
-#to avoid unnecessary work during a reproducible run, the pal gene signature is provided as pal_feats and is incorporated into the analysis
+#to avoid unnesscissary work during a reproducible run, the pal gene signatire is provided as pal_feats and is incooperated into the analysis
 pal_feats = c('TIMP1', 'NAA10', 'ENSCAFG00000037735', 'GP6', 'SEC11C', 'FTL', 'NRGN', 'ACOT7', 'VCL', 'RSU1', 'ITGB1', 'H3-3A', 'RABGAP1L', 'SELP', 'SH3GLB1', 'ACTB', 'ENSCAFG00000008221', 'TLN1', 'GSN', 'AMD1', 'TREM2', 'SH3BGRL2', 'MYH9', 'PLEK', 'ENSCAFG00000042554', 'RAP1B', 'ENSCAFG00000004260', 'NAP1L1', 'PPBP', 'RASA3', 'ITGA2B', 'EIF1', 'ACTG1', 'C9H17orf64', 'JMJD6', 'CCL14', 'GNG11', 'IGF2BP3', 'TBXAS1', 'VDAC3', 'MARCHF2', 'TPM4', 'TKT', 'FTH1.1', 'FERMT3', 'RTN3', 'PRKAR2B', 'SVIP', 'ENSCAFG00000030286', 'ADA', 'MYL9', 'TUBB1', 'TUBA1B', 'METTL7A', 'THBS1', 'SERF2', 'PIF1', 'B2M', 'GAS2L1', 'YWHAH', 'HPSE', 'ATG3', 'ENSCAFG00000015217', 'ITGA6','RGS18', 'SUB1', 'LGALS1', 'CFL1', 'BIN2', 'CAT', 'RGS10', 'MGST3', 'TMBIM6', 'PFN1', 'CD63', 'RALBP1', 'GNAS', 'SEPTIN7', 'TPT1', 'UBB', 'ATF4', 'BBLN', 'MTDH', 'ENSCAFG00000017655','FYB1', 'ENO1', 'GABARAP', 'SSR4', 'MSN', 'ENSCAFG00000011134', 'ENSCAFG00000046637', 'COX8A', 'DLA-64', 'CD47', 'VASP', 'DYNLRB1', 'DLA88', 'SMDT1', 'ATP5PF','ELOB', 'ENSCAFG00000029155', 'ARPC3', 'VPS28', 'LRRFIP1', 'SRP14', 'ABRACL', 'ENSCAFG00000043577', 'ENSCAFG00000042598')
 
 
@@ -137,7 +137,7 @@ colorz <- c("black", "#3267AD", "#3267AD",
             "#645A9F", "#DBB9EC", "#AF615B",
             "#13B9AD", "#00366C", "#7E7E7E"
            )
-fig1b <- prettyFeats(seu.obj = seu.obj, nrow = 5, ncol = 3, features = features, color = colorz, order = F) 
+fig1b <- prettyFeats(seu.obj = seu.obj, nrow = 5, ncol = 3, features = features, color = colorz, order = F, legJust = "top") 
 ggsave(paste("./output/", outName, "/", outName, "_b_featPlots.png", sep = ""), width =9, height = 15)
 
 
@@ -146,13 +146,14 @@ ggsave(paste("./output/", outName, "/", outName, "_b_featPlots.png", sep = ""), 
 seu.obj <- loadMeta(seu.obj = seu.obj, metaFile = "./h7_majorID_wIntrons.csv", groupBy = "clusterID", metaAdd = "colorID")
 
 fig1c <- majorDot(seu.obj = seu.obj, groupBy = "colorID",
-                  yAxis = c("Monocyte","DC","B cell","Neutrophil","CD4 T cell","CD8/NK cell","Eosinophil","Basophil","gd T cell","Cycling T cell","CD34+ Unclassified"),
+                  yAxis = c("Monocyte","DC","B cell","Neutrophil","CD4 T cell","CD8/NK cell","Eosinophil","Basophil","gd T cell","Cycling T cell","CD34+ unk"),
                   features = c("ANPEP", "DLA-DRA", "FLT3", "IGHM", "JCHAIN",
                                "MS4A1", "S100A12", "SERPINA1", "CD4", "IL7R", 
                                "CD52", "CCL5", "GZMB", "KLRB1", "CSTB", "IL5RA", 
                                "IL17RB", "GATA3", "TOP2A", "CENPF", "CD34", "CD109")
-                 )
-ggsave(paste("./output/", outName, "/", outName, "_c_majorDot.png", sep = ""), width =10, height = 7)
+                 ) + theme(axis.title = element_blank(),
+                           axis.text = element_text(size = 12))
+ggsave(paste("./output/", outName, "/", outName, "_c_majorDot.png", sep = ""), width =8, height = 6)
 
 
 ### Fig 1d: umap by sample
@@ -171,6 +172,15 @@ fig1d <- formatUMAP(pi) + labs(colour="Cell source:") + theme(legend.position = 
 ggsave(paste("./output/", outName, "/", outName, "_d_umap_bySample.png", sep = ""), width =7, height = 7)
 
 
+### Fig 1e: stacked bar graph by colorID
+p <- stackedBar(seu.obj = seu.obj, downSampleBy = "cellSource", groupBy = "name", clusters = "colorID") +
+scale_fill_manual(labels = levels(seu.obj$name), 
+               values = levels(seu.obj$colz)) + theme(axis.title.y = element_blank(),
+                                                      axis.title.x = element_text(size = 14),
+                                                      axis.text = element_text(size = 12)) + NoLegend() + scale_x_discrete(limits=rev(c("Monocyte","DC","B cell","Neutrophil","CD4 T cell","CD8/NK cell","Eosinophil","Basophil","gd T cell","Cycling T cell","CD34+ unk")),expand = c(0, 0))
+ggsave(paste("./output/", outName, "/", outName, "_e_stackedBar.png", sep = ""), width =7, height = 5)
+
+
 ### Fig supp: singleR to use human reference for cell classification
 singleR(seu.obj = seu.obj, outName = "h7_CLEAN_introns", clusters = "clusterID", outDir = "./output/fig1/singleR/")
 
@@ -179,8 +189,6 @@ singleR(seu.obj = seu.obj, outName = "h7_CLEAN_introns", clusters = "clusterID",
 p <- stackedBar(seu.obj = seu.obj, downSampleBy = "cellSource", groupBy = "name", clusters = "clusterID") +
 scale_fill_manual(labels = levels(seu.obj$name), 
                values = levels(seu.obj$colz)) + theme(legend.position = "bottom") + guides(fill = guide_legend(nrow = 1, byrow =T))
-
-ggsave(file = './output/supp_stackedBar_h7.png', width = 8, height = 12)
 ggsave(paste("./output/", outName, "/", outName, "_supp_stackedBar.png", sep = ""), width =8, height = 12)
 
 #################################################
@@ -255,11 +263,11 @@ seu.obj <- loadMeta(seu.obj = seu.obj, metaFile = "./HvOvadj_majorID_wIntrons.cs
 #reorder majorID factor levels
 seu.obj$majorID <- factor(seu.obj$majorID, levels = c("CD4 T cell", "CD8/NK cell","gd T cell", "DN T cell",
                                                       "Cycling T cell", "Monocyte", "DC", "Neutrophil",
-                                                     "B cell","Plasma cell","Granulocyte", "CD34+ Unclassified"))
+                                                     "B cell","Plasma cell","Granulocyte", "CD34+ unk"))
 
-levels(seu.obj$majorID)[12] <- "CD34+ Unk"
 colArray <- read.csv("./HvOvadj_majorID_wIntrons.csv", header = T)
 outName <- "fig2"
+
 
 # for testing purposes
 # seu.obj$ageGroup <- factor(seu.obj$ageGroup, levels = c("Healthy", "Middle-aged_OS", "Old_OS"))
@@ -422,6 +430,14 @@ p <- freqPlots(seu.obj = seu.obj.ageSub, method = 1, nrow= 3, groupBy = "majorID
 ggsave(paste("./output/", outName, "/", outName, "_supp_ageMatched_freqPlots3_hvo.png", sep = ""), width =12, height = 6)
 
 
+### Fig Extra: during preeration of uploading data to UCSC cell browser I noticed clus38 was largely coming from OS dogs -- using the following code it is apprent that the cluster has pal contaminatoin and is not of interest -- as suggested through independednt reclustering
+p_volc <- btwnClusDEG(seu.obj = seu.obj, groupBy = "clusterID", idents.1 = "38", idents.2 = c("3","4","7","23"), bioRep = "name",
+                      padj_cutoff = 0.05, lfcCut = 0.58, minCells = 5, outDir = paste0("./output/", outName, "/"), 
+                      title = "c38_vs_cyto", idents.1_NAME = "c38", idents.2_NAME = "cyto", 
+                      returnVolc = T, doLinDEG = F, paired = T, addLabs = "",lowFilter = T, dwnSam = F
+                     )
+
+
 ###########################################
 ### END FIGURE 2  | BEGIN CYTO ANALYSIS ###
 ###########################################
@@ -549,7 +565,7 @@ singleR(seu.obj = seu.obj, outName = "cyto", clusters = "clusterID_sub", outDir 
 ### Fig 3a: plot clustering results - req umapHighLight fig generated from parent
 pi <- DimPlot(seu.obj,
               reduction = "umap", 
-              group.by = "clusterID_sub",
+              group.by = "clusterID",
               cols = colArray$colour,
               pt.size = 0.25,
               label = TRUE,
@@ -1351,7 +1367,7 @@ ggsave(paste("./output/", outName, "/", outName, "_supp_featPlots.png", sep = ""
 
 
 ### Extra analysis: compare to ros data -- must request ros data from authors; sorry for the inconvenience
-ros_myeloid <- readRDS("/pl/active/dow_lab/dylan/k9_PBMC_scRNA/analysis/ros_output/sub_HvO_Myeloid_mt_r7_res1.1_dims40_S3.rds")
+ros_myeloid <- readRDS("/pl/active/dow_lab/dylan/k9_PBMC_scRNA/analysis/ros_output/sub_H vO_Myeloid_mt_r7_res1.1_dims40_S3.rds")
 features <- c("DLA-DRA", "FCGR1A", "CD86", "CCR2", "S100A12", 
               "CD14", "CD4", "ANPEP", "CD68")
 
@@ -2042,12 +2058,19 @@ ggsave(paste("./output/", outName, "/", outName, "_supp_8c_FlowCoorPlot.png.png"
 
 
 ###### generate feat list #####
-vilnPlots(seu.obj = seu.obj.all, groupBy = "finalID", numOfFeats = 24, outName = "HvO_cell.l2",
+seu.obj.all <- readRDS("/pl/active/dow_lab/dylan/k9_PBMC_scRNA/analysis/output/s3/final_dataSet_HvO.rds") # can just load in from GEO
+
+vilnPlots(seu.obj = seu.obj.all, groupBy = "celltype.l3", numOfFeats = 24, outName = "HvO_cell.l3",
+                      outDir = "./output/viln_finalID_HvO_cell.l3/", outputGeneList = T, filterOutFeats = c("^MT-", "^RPL", "^ENSCAF", "^RPS"), assay = "RNA", 
+                      min.pct = 0.25, only.pos = T
+                     )
+
+vilnPlots(seu.obj = seu.obj.all, groupBy = "celltype.l2", numOfFeats = 24, outName = "HvO_cell.l2",
                       outDir = "./output/viln_finalID_HvO_cell.l2/", outputGeneList = T, filterOutFeats = c("^MT-", "^RPL", "^ENSCAF", "^RPS"), assay = "RNA", 
                       min.pct = 0.25, only.pos = T
                      )
 
-vilnPlots(seu.obj = seu.obj.all, groupBy = "majorID", numOfFeats = 24, outName = "HvO_cell.l1",
+vilnPlots(seu.obj = seu.obj.all, groupBy = "celltype.l1", numOfFeats = 24, outName = "HvO_cell.l1",
                       outDir = "./output/viln_finalID_HvO_cell.l1/", outputGeneList = T, filterOutFeats = c("^MT-", "^RPL", "^ENSCAF", "^RPS"), assay = "RNA", 
                       min.pct = 0.25, only.pos = T
                      )
@@ -2093,7 +2116,7 @@ write.csv(featOutPROCESSED.df, file = paste("./output/", outName, "/", outName, 
 ###IF SKIPPED PREVIOUS LINES THIS CODE WILL CLEAN UP THE OBJ TO GET IT TO THE STATE UPLOADED TO GEO
 
 ##################################################
-### LAST -- CLEAN UP OBJECTS FRO UPLOAD TO GEO ###
+### LAST -- CLEAN UP OBJECTS FOR UPLOAD TO GEO ###
 ##################################################
 
 seu.obj.all@meta.data <- seu.obj.all@meta.data[,!grepl("DF|pANN", colnames(seu.obj.all@meta.data))]
@@ -2114,6 +2137,122 @@ seu.final.H <- subset(seu.obj.all,
                   cellSource ==  "Healthy") 
 
 saveRDS(seu.final.H, file = "./output/s3/final_dataSet_H.rds")
+
+#remove additional meta slots for cell browser
+seu.obj < readRDS("./output/s3/final_dataSet_H.rds")
+seu.obj@meta.data <- seu.obj@meta.data[,-c(5,6,13,14,15)]
+saveRDS(seu.obj, file = "./output/s3/final_dataSet_H.rds")
+
+#clean helpers
+seu.obj <- readRDS("/pl/active/dow_lab/dylan/k9_PBMC_scRNA/analysis/inputIntrons/forGEO/helper.rds")
+seu.obj@meta.data <- seu.obj@meta.data[,-c(5,6,13,14,15,16)]
+
+seu.obj <- loadMeta(seu.obj = seu.obj, metaFile = "./helper_hVoWadj_forLeg_020623.csv", groupBy = "clusterID_sub", metaAdd = "clusterID_sub_clean")
+seu.obj$clusterID_sub_clean <- factor(x = Idents(seu.obj), levels = sort(as.numeric(as.character(levels(seu.obj)))))
+seu.obj <- loadMeta(seu.obj = seu.obj, metaFile = "./helper_hVoWadj_forLeg_020623.csv", groupBy = "clusterID_sub", metaAdd = "majorID_sub")
+
+#create subset object to remove por qulity cells from downstream analysis
+seu.obj <- subset(seu.obj, subset = majorID_sub != "exclude")
+seu.obj$majorID_sub <- droplevels(seu.obj$majorID_sub)
+colnames(seu.obj@meta.data)[17] <- "celltype.l3"
+saveRDS(seu.obj, "/pl/active/dow_lab/dylan/k9_PBMC_scRNA/analysis/inputIntrons/forGEO/helper.rds")
+
+#clean myeloid
+seu.obj <- readRDS("/pl/active/dow_lab/dylan/k9_PBMC_scRNA/analysis/inputIntrons/forGEO/myeloid.rds")
+seu.obj@meta.data <- seu.obj@meta.data[,-c(5,6,13,14,15,16,17)]
+
+#load in key meta data and remove poor quality cells for downstream analysis
+seu.obj <- loadMeta(seu.obj = seu.obj, metaFile = "./coldaf_myeloid_new.csv", groupBy = "clusterID_sub", metaAdd = "majorID_sub")
+seu.obj <- loadMeta(seu.obj = seu.obj, metaFile = "./coldaf_myeloid_new.csv", groupBy = "clusterID_sub", metaAdd = "majorID_sub2")
+seu.obj <- loadMeta(seu.obj = seu.obj, metaFile = "./refColz.csv", groupBy = "orig.ident", metaAdd = "name")
+seu.obj <- loadMeta(seu.obj = seu.obj, metaFile = "./refColz.csv", groupBy = "orig.ident", metaAdd = "colz")
+seu.obj <- loadMeta(seu.obj = seu.obj, metaFile = "./coldaf_myeloid_new.csv", groupBy = "clusterID_sub", metaAdd = "clusterID_sub_clean")
+seu.obj$clusterID_sub_clean <- factor(x = Idents(seu.obj), levels = sort(as.numeric(as.character(levels(seu.obj)))))
+
+seu.obj <- subset(seu.obj, subset = majorID_sub != "exclude")
+seu.obj@meta.data <- seu.obj@meta.data[,-c(17,18,20)]
+colnames(seu.obj@meta.data)[16] <- "celltype.l3"
+saveRDS(seu.obj, "/pl/active/dow_lab/dylan/k9_PBMC_scRNA/analysis/inputIntrons/forGEO/myeloid.rds")
+
+#clean bcell
+seu.obj <- readRDS("/pl/active/dow_lab/dylan/k9_PBMC_scRNA/analysis/inputIntrons/forGEO/bcell.rds")
+seu.obj@meta.data <- seu.obj@meta.data[,-c(5,6,13,14,15,16)]
+
+seu.obj <- loadMeta(seu.obj = seu.obj, metaFile = "./refColz.csv", groupBy = "orig.ident", metaAdd = "name")
+seu.obj <- loadMeta(seu.obj = seu.obj, metaFile = "./bcell_hVoWadj.csv", groupBy = "clusterID_sub", metaAdd = "pctID")
+seu.obj.sub <- subset(seu.obj, subset = pctID != "exclude")
+seu.obj.sub$pctID <- droplevels(seu.obj.sub$pctID)
+colnames(seu.obj@meta.data)[16] <- "celltype.l3"
+saveRDS(seu.obj, "/pl/active/dow_lab/dylan/k9_PBMC_scRNA/analysis/inputIntrons/forGEO/bcell.rds")
+
+
+#clean cyto
+seu.obj <- readRDS("/pl/active/dow_lab/dylan/k9_PBMC_scRNA/analysis/inputIntrons/forGEO/cytotoxic.rds")
+seu.obj@meta.data <- seu.obj@meta.data[,-c(5,6,13,14,15,16)]
+
+
+#load in metadata
+seu.obj <- loadMeta(seu.obj = seu.obj, metaFile = "./refColz.csv", groupBy = "orig.ident", metaAdd = "name")
+seu.obj <- loadMeta(seu.obj = seu.obj, metaFile = "./cyto_hVoWadj.csv", groupBy = "clusterID_sub", metaAdd = "majorID_sub")
+#reorder majorID factor levels
+seu.obj$majorID_sub <- factor(seu.obj$majorID_sub, levels = c("Naive CD8", "Effector CD8","Memory CD8",
+                                                      "NK/NKT cell", "DN T cell", "CD8 gd T cell"))
+
+colnames(seu.obj@meta.data)[16] <- "celltype.l3"
+saveRDS(seu.obj, "/pl/active/dow_lab/dylan/k9_PBMC_scRNA/analysis/inputIntrons/forGEO/cytotoxic.rds")
+
+
+#clean colors
+df <- read.csv("/pl/active/dow_lab/dylan/k9_PBMC_scRNA/analysis/sheets/majorGroups.csv")
+df <- df[-37,]
+df <- df[,c("colour","finalID")]
+write.csv(df, "./output/cellbrowser/celltype.l3_colours.csv", row.names=F)
+
+df <- read.csv("/pl/active/dow_lab/dylan/k9_PBMC_scRNA/analysis/sheets/majorGroups.csv")
+df <- df[-37,]
+df <- df[,c("colour","middleID")]
+write.csv(df, "./output/cellbrowser/celltype.l2_colours.csv", row.names=F)
+
+df <- read.csv("/pl/active/dow_lab/dylan/k9_PBMC_scRNA/analysis/sheets/majorGroups.csv")
+df <- df[-37,]
+df <- df[,c("colour","majorGroup")]
+write.csv(df, "./output/cellbrowser/celltype.l1_colours.csv", row.names=F)
+
+
+##########################################
+### COMPILE -- SUPP DATA 3 (DEG SHEET) ###
+##########################################
+files <- list.files(path = c("./output/fig3/btwnClusDEG/","./output/fig4/btwnClusDEG/","./output/fig5/btwnClusDEG/"), pattern=".csv", all.files=FALSE,
+                        full.names=T)
+
+df.list <- lapply(files, read.csv)
+
+compiled.df <- do.call(rbind, df.list) %>% as.data.frame()
+compiled.df$gs_base <- gsub("OTHER_T_CELLS","OTHER_CD4T_CELLS",compiled.df$gs_base)
+write.csv(compiled.df, file = "./output/supplemental_data_3.csv")
+
+
+##############################################
+### CLEAN GENE LISTS FOR UCSC CELL BROWSER ###
+##############################################
+df <- read.csv("/pl/active/dow_lab/dylan/k9_PBMC_scRNA/analysis/output/viln_finalID_HvO_cell.l1/HvO_cell.l1_gene_list.csv")[,c("cluster","gene","p_val_adj","avg_log2FC")]
+write.csv(df, "./output/cellbrowser/HvO_cell.l1_gene_list.csv", row.names=F)
+
+df <- read.csv("/pl/active/dow_lab/dylan/k9_PBMC_scRNA/analysis/output/viln_finalID_HvO_cell.l2/HvO_cell.l2_gene_list.csv")[,c("cluster","gene","p_val_adj","avg_log2FC")]
+write.csv(df, "./output/cellbrowser/HvO_cell.l2_gene_list.csv", row.names=F)
+
+df <- read.csv("/pl/active/dow_lab/dylan/k9_PBMC_scRNA/analysis/output/viln_finalID_HvO_cell.l3/HvO_cell.l3_gene_list.csv")[,c("cluster","gene","p_val_adj","avg_log2FC")]
+write.csv(df, "./output/cellbrowser/HvO_cell.l3_gene_list.csv", row.names=F)
+
+df <- read.csv("/pl/active/dow_lab/dylan/k9_PBMC_scRNA/analysis/output/viln_finalID_H_cell.l1/H_cell.l1_gene_list.csv")[,c("cluster","gene","p_val_adj","avg_log2FC")]
+write.csv(df, "./output/cellbrowser/H_cell.l1_gene_list.csv", row.names=F)
+
+df <- read.csv("/pl/active/dow_lab/dylan/k9_PBMC_scRNA/analysis/output/viln_finalID_H_cell.l2/H_cell.l2_gene_list.csv")[,c("cluster","gene","p_val_adj","avg_log2FC")]
+write.csv(df, "./output/cellbrowser/H_cell.l2_gene_list.csv", row.names=F)
+
+df <- read.csv("/pl/active/dow_lab/dylan/k9_PBMC_scRNA/analysis/output/viln_finalID_H_cell.l3/H_cell.l3_gene_list.csv")[,c("cluster","gene","p_val_adj","avg_log2FC")]
+write.csv(df, "./output/cellbrowser/H_cell.l3_gene_list.csv", row.names=F)
+
 
 
 ### BONUS: final evlautation of age-driven differneces
