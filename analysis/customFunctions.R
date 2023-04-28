@@ -885,6 +885,7 @@ cusLabels <- function(plot = NULL, shape = 21, labCol = "black", size = 8, alpha
 }
 
 ############ freqPlots ############
+#approach adopted from https://github.com/ajwilk/2020_Wilk_COVID (10.1038/s41591-020-0944-y)
 freqPlots <- function(seu.obj = NULL, groupBy = "clusterID", refVal = "orig.ident", comp = "cellSource", colz = NULL, namez = NULL, method = 1, nrow = 3, title = F, legTitle = NULL, no_legend = F, showPval = T
                        ) {
     
