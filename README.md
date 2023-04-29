@@ -2,7 +2,7 @@
 
 This GitHub repository contains all the analysis code used in, "A single cell RNA sequencing atlas of circulating leukocytes from healthy and osteosarcoma affected dogs."
 
-If you use our raw/processed data, extract data using the UCSC Cell Browser portal, or use portions of our code in your analayis, please cite:
+If you use our raw/processed data, extract data using the UCSC Cell Browser portal, or use portions of our code in your analysis, please cite:
 > Ammons DT, Harris RA, Hopkins LS, Kurihara J, Weishaar K and Dow S (2023) A single-cell RNA sequencing atlas of circulating leukocytes from healthy and
 osteosarcoma affected dogs. Front. Immunol. 14:1162700. doi: 10.3389/fimmu.2023.1162700
 
