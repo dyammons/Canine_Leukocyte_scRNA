@@ -62,7 +62,7 @@ Cell markers lists were curated using 7 healthy canine leukocyte samples. The to
 <details><summary>cellType.l2</summary>
 <p>
 
-|Cell type         |FIELD2                                                              |Marker                                                              |
+|Cell type         |                                                                    |Marker                                                              |
 |------------------|--------------------------------------------------------------------|--------------------------------------------------------------------|
 |CD8 T cell        |                                                                    |                                                                    |
 |                  |CD8 T cell                                                          |CCL5, GZMB, TRPM3, KLRK1, KLRB1, CCL4, IL2RB, KLRD1, CD96           |
