@@ -1,6 +1,7 @@
 # Canine_Leukocyte_scRNA
+[![DOI](https://zenodo.org/badge/546752777.svg)](https://zenodo.org/badge/latestdoi/546752777)
 
-This GitHub repository contains all the analysis code used in, "A single cell RNA sequencing atlas of circulating leukocytes from healthy and osteosarcoma affected dogs."
+This GitHub repository contains all the analysis code used in, "A single-cell RNA sequencing atlas of circulating leukocytes from healthy and osteosarcoma affected dogs."
 
 If you use our raw/processed data, extract data using the UCSC Cell Browser portal, or use portions of our code in your analysis, please cite:
 > Ammons DT, Harris RA, Hopkins LS, Kurihara J, Weishaar K and Dow S (2023) A single-cell RNA sequencing atlas of circulating leukocytes from healthy and
