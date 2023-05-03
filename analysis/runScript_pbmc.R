@@ -36,9 +36,6 @@ load10x(din = "./healthyIntrons/", dout = "./output/s1/healthy/", outName = "221
 #integrate the data into one object
 sctIntegrate(din = "./output/s1/healthy/", dout = "./output/s2/", outName = "221005_h7_regPal_wPalpct_introns", vars.to.regress = c("percent.mt", "percent.pal"), nfeatures = 2000)
 
-#integrate the data into one object
-sctIntegrate(din = "./output/s1/healthy/", dout = "./output/s2/", outName = "test", vars.to.regress = c("percent.mt", "percent.ppbp"), nfeatures = 2000)
-
 #load in integrated obj
 seu.obj <- readRDS(file = "./output/s2/221005_h7_regPal_wPalpct_introns_seu.integrated.obj_S2.rds")
 
