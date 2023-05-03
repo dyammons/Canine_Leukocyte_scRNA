@@ -31,7 +31,7 @@ pal_feats = c('TIMP1', 'NAA10', 'ENSCAFG00000037735', 'GP6', 'SEC11C', 'FTL', 'N
 
 
 ### Process and analyze healthy samples first
-load10x(din = "./healthyIntrons/", dout = "./output/s1/healthy/", outName = "221005_h7_introns", testQC = F, nFeature_RNA_high = 4500, nFeature_RNA_low = 200, percent.mt_high = 25, nCount_RNA_high = 20000, nCount_RNA_low = 100, pal_feats = pal_feats)
+load10x(din = "./healthyIntrons/", dout = "./output/s1/healthy/", outName = "221005_h7_introns", testQC = F, nFeature_RNA_high = 4500, nFeature_RNA_low = 200, percent.mt_high = 10, nCount_RNA_high = 20000, nCount_RNA_low = 500, pal_feats = pal_feats)
 
 #integrate the data into one object
 sctIntegrate(din = "./output/s1/healthy/", dout = "./output/s2/", outName = "221005_h7_regPal_wPalpct_introns", vars.to.regress = c("percent.mt", "percent.pal"), nfeatures = 2000)
@@ -197,7 +197,7 @@ ggsave(paste("./output/", outName, "/", outName, "_supp_stackedBar.png", sep = "
 
 ### Prepare healthy vs OS dataset
 #load in 10x data and qc filter eeach sample
-load10x(din = "./inputIntrons/", dout = "./output/s1/", outName = "221005_introns", testQC = F, nFeature_RNA_high = 4500, nFeature_RNA_low = 200, percent.mt_high = 25, nCount_RNA_high = 20000, nCount_RNA_low = 100, pal_feats = pal_feats)
+load10x(din = "./inputIntrons/", dout = "./output/s1/", outName = "221005_introns", testQC = F, nFeature_RNA_high = 4500, nFeature_RNA_low = 200, percent.mt_high = 10, nCount_RNA_high = 20000, nCount_RNA_low = 500, pal_feats = pal_feats)
 
 #integrate the data into one object
 sctIntegrate(din = "./output/s1/", dout = "./output/s2/", outName = "221005_hVoWadj_regPal_wPalpct_introns", vars.to.regress = c("percent.mt", "percent.pal"), nfeatures = 2000)
