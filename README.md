@@ -31,6 +31,7 @@ If you have any questions or concerns, please submit an issue, contact the corre
 The proccessed dataset is avaliable for browsing via the UCSC Cell Browser portal.
 Using the portal you can exlore feature expression throughout the dataset as well as obtain the transcriptomic signatures of each cell type though an interactive webpage.
 
+Note: the UCSC Cell Browser dataset is being updated to include all dataset presented in the manuscript. Once updated this note will be removed. 
 Link to the dataset: https://canine-leukocyte-atlas.cells.ucsc.edu
 
 Link to UCSC Cell Browser documentation: https://cellbrowser.readthedocs.io/en/master/
