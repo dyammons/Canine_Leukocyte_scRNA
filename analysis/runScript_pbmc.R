@@ -12,8 +12,8 @@ source("/pl/active/dow_lab/dylan/repos/K9-PBMC-scRNAseq/analysisCode/customFunct
 ##############################
 
 ###Analysis note: 
-#our preliminary analysis indicated that platlet-cell doublets were confounding clustering, so we attempted to reduce the impact of platelets (pals) by calculating a gene signature that was determined by compelitng an intitial analysis with pals included - note the approach used is similar to just using percent PPBP instead of an entire list of pal assocaited features
-#similar gene signatures can be obtained by running the custom 'load10x' funciton with 'removeRBC_pal' set to FALSE then running:
+#our preliminary analysis indicated that platelet-cell doublets were confounding clustering, so we attempted to reduce the impact of platelets (pals) by calculating a gene signature that was determined by completing an initial analysis with pals included - note the approach used is similar to just using percent PPBP instead of an entire list of pal associated features
+#similar gene signatures can be obtained by running the custom 'load10x' function with 'removeRBC_pal' set to FALSE then running:
 
     #pal_1 <- FindMarkers(seu.integrated.obj, ident.1 = 19, min.pct = 0.50) # where ident.1 = a pal cluster
     #pal_2 <- FindMarkers(seu.integrated.obj, ident.1 = 24, min.pct = 0.50) # where ident.1 = a pal cluster (if there is a second)
@@ -34,33 +34,64 @@ pal_feats = c('TIMP1', 'NAA10', 'ENSCAFG00000037735', 'GP6', 'SEC11C', 'FTL', 'N
 load10x(din = "./healthyIntrons/", dout = "./output/s1/healthy/", outName = "221005_h7_introns", testQC = F, nFeature_RNA_high = 4500, nFeature_RNA_low = 200, percent.mt_high = 10, nCount_RNA_high = 20000, nCount_RNA_low = 500, pal_feats = pal_feats)
 
 #integrate the data into one object
-sctIntegrate(din = "./output/s1/healthy/", dout = "./output/s2/", outName = "221005_h7_regPal_wPalpct_introns", vars.to.regress = c("percent.mt", "percent.pal"), nfeatures = 2000)
+seu.obj <- sctIntegrate(din = "./output/s1/healthy/", dout = "./output/s2/", outName = "221005_h7_regPal_wPalpct_introns", vars.to.regress = c("percent.mt", "percent.pal"), nfeatures = 2000)
 
 #load in integrated obj
 seu.obj <- readRDS(file = "./output/s2/221005_h7_regPal_wPalpct_introns_seu.integrated.obj_S2.rds")
 
 #determine optimal cluster parameters
-clusTree(seu.obj = seu.obj, dout = "./output/clustree/", outName = "221005_h7_regPal_wPalpct_introns", test_dims = c(50,40,35,30,25), algorithm = 3, prefix = "integrated_snn_res.")
+clusTree(seu.obj = seu.obj, dout = "./output/clustree/", outName = "221005_h7_regPal_wPalpct_introns", test_dims = c(50,45,40,35,30,25), algorithm = 3, prefix = "integrated_snn_res.")
 
 #reduce and visulize the dataset
-seu.obj <- dataVisUMAP(seu.obj = seu.obj, outDir = "./output/s3/", outName = "221005_h7_regPal_wPalpct_introns", final.dims = 45, final.res = 1.1, stashID = "clusterID", algorithm = 3, prefix = "integrated_snn_res.", min.dist = 0.6, n.neighbors = 75, assay = "integrated", saveRDS = T, return_obj = T, returnFeats = T,
+seu.obj <- dataVisUMAP(seu.obj = seu.obj, outDir = "./output/s3/", outName = "221005_h7_regPal_wPalpct_introns", final.dims = 45, final.res = 1.5, stashID = "clusterID", algorithm = 3, prefix = "integrated_snn_res.", min.dist = 0.6, n.neighbors = 75, assay = "integrated", saveRDS = F, return_obj = T, returnFeats = T,
                         features = c("PTPRC", "CD3E", "CD8A", "GZMA", 
                                      "IL7R", "ANPEP", "FLT3", "DLA-DRA", 
                                      "CD4", "MS4A1", "PPBP","HBM")
                        )
 
+###Analysis note: 
+#on reproducible run, the clustering appeared to change and the Clus #s of the low qulaity cells may shift
+#NOTE: if looking to study specfic cell types presetned in the publication I highly reccomend using the processed data avaliable on GEO. Re-running the these first few steps will produce highly similar results, but not identical; likely due to the use of doubletfinder
+
+#to check QC parameters, use (and look for clusters with low nCount_RNA and low nFeature_RNA and high mt pct):
+features <- c("nCount_RNA", "nFeature_RNA", "percent.mt")
+p <- prettyFeats(seu.obj = seu.obj, nrow = 1, ncol = 3, features = features, 
+                 color = "black", order = F, pt.size = 0.0000001, title.size = 18)
+ggsave(paste("./output/QC_feats.png", sep = ""), width = 9, height = 3)
+
+#if still unclear which clusters are the low Q pops, try this:
+seu.processed <- readRDS("./output/s3/final_dataSet_H.rds") # download processed data from 
+
+highlight <- colnames(seu.obj)[!colnames(seu.obj) %in% colnames(seu.processed)]
+
+pi <- DimPlot(seu.obj,#seu.integrated.obj, 
+        reduction = "umap", 
+        group.by = "clusterID",
+        cols = "grey",
+        pt.size = 0.5,
+        label = F,
+        cells.highlight= highlight,
+        cols.highlight = "orchid",
+        order = F
+        #label.box = TRUE
+ )
+
+p <- formatUMAP(pi) + NoLegend()
+ggsave(paste("./output/lowQ_highlight.png", sep = ""), width =7, height = 7)
+
+
 #remove low quality clusters
 seu.obj <- subset(seu.obj,
                   subset = 
-                  clusterID !=  "18" & clusterID ==  "19" & clusterID ==  "28" & clusterID ==  "31") 
+                  clusterID !=  "19" & clusterID !=  "23" & clusterID !=  "26" & clusterID !=  "32") 
 
 #complete independent reclustering on subset data
-indReClus(seu.obj = seu.obj, outDir = "./output/s2/", subName = "hVoWadj_CLEAN_introns", preSub = T,
+seu.obj <- indReClus(seu.obj = seu.obj, outDir = "./output/s2/", subName = "221005_h7_CLEAN_regPal_wPalpct_introns", preSub = T,
                       vars.to.regress = c("percent.mt","percent.pal")
                        )
 
 #determine optimal cluster parameters
-clusTree(seu.obj = seu.obj, dout = "./output/clustree/", outName = "hVoWadj_CLEAN_introns", test_dims = c(50,40,35,30,25), algorithm = 3, prefix = "integrated_snn_res.")
+clusTree(seu.obj = seu.obj, dout = "./output/clustree/", outName = "221005_h7_CLEAN_regPal_wPalpct_introns", test_dims = c(50,40,35,30,25), algorithm = 3, prefix = "integrated_snn_res.")
 
 #reduce and visulize the final dataset
 final.dims = 45
@@ -68,7 +99,7 @@ final.res = 1.6
 min.dist = 0.6
 n.neighbors = 75
 
-seu.obj <- dataVisUMAP(seu.obj = seu.obj, outDir = "./output/s3/", outName = "hVoWadj_CLEAN_introns", final.dims = final.dims, final.res = final.res, stashID = "clusterID", algorithm = 3, prefix = "integrated_snn_res.", min.dist = min.dist, n.neighbors = n.neighbors, assay = "integrated", saveRDS = F, return_obj = T, returnFeats = T,
+seu.obj <- dataVisUMAP(seu.obj = seu.obj, outDir = "./output/s3/", outName = "221005_h7_CLEAN_regPal_wPalpct_introns", final.dims = final.dims, final.res = final.res, stashID = "clusterID", algorithm = 3, prefix = "integrated_snn_res.", min.dist = min.dist, n.neighbors = n.neighbors, assay = "integrated", saveRDS = T, return_obj = T, returnFeats = T,
                         features = c("PTPRC", "CD3E", "CD8A", "GZMA", 
                                      "IL7R", "ANPEP", "FLT3", "DLA-DRA", 
                                      "CD4", "MS4A1", "PPBP","HBM")
@@ -78,7 +109,6 @@ seu.obj <- dataVisUMAP(seu.obj = seu.obj, outDir = "./output/s3/", outName = "hV
 ######################
 ### BEGIN FIGURE 1 ###
 ######################
-
 
 ### Complete healthy analysis
 seu.obj <- readRDS("./output/s3/h7_CLEAN_introns_res1.6_dims45_S3.rds")
@@ -194,7 +224,7 @@ ggsave(paste("./output/", outName, "/", outName, "_supp_stackedBar.png", sep = "
 
 ### Prepare healthy vs OS dataset
 #load in 10x data and qc filter eeach sample
-load10x(din = "./inputIntrons/", dout = "./output/s1/", outName = "221005_introns", testQC = F, nFeature_RNA_high = 4500, nFeature_RNA_low = 200, percent.mt_high = 10, nCount_RNA_high = 20000, nCount_RNA_low = 500, pal_feats = pal_feats)
+load10x(din = "./inputIntrons/", dout = "./output/s1/", outName = "221005_introns", testQC = F, nFeature_RNA_high = 4500, nFeature_RNA_low = 200, percent.mt_high = 25, nCount_RNA_high = 20000, nCount_RNA_low = 100, pal_feats = pal_feats)
 
 #integrate the data into one object
 sctIntegrate(din = "./output/s1/", dout = "./output/s2/", outName = "221005_hVoWadj_regPal_wPalpct_introns", vars.to.regress = c("percent.mt", "percent.pal"), nfeatures = 2000)
@@ -203,7 +233,7 @@ sctIntegrate(din = "./output/s1/", dout = "./output/s2/", outName = "221005_hVoW
 seu.obj <- readRDS(file = "./output/s2/221005_hVoWadj_regPal_wPalpct_introns_seu.integrated.obj_S2.rds")
 
 #determine optimal cluster parameters
-clusTree(seu.obj = seu.obj, dout = "./output/clustree/", outName = "221005_hVoWadj_regPal_wPalpct_introns", test_dims = c(50,40,35,30,25), algorithm = 3, prefix = "integrated_snn_res.")
+clusTree(seu.obj = seu.obj, dout = "./output/clustree/", outName = "221005_hVoWadj_regPal_wPalpct_introns", test_dims = c(50,45,40,35,30,25), algorithm = 3, prefix = "integrated_snn_res.")
 
 #reduce and visulize the dataset
 seu.obj <- dataVisUMAP(seu.obj = seu.obj, outDir = "./output/s3/", outName = "hVoWadj_regPal_wPalpct", final.dims = 45, final.res = 1.1, stashID = "clusterID", algorithm = 3, prefix = "integrated_snn_res.", min.dist = 0.6, n.neighbors = 75, assay = "integrated", saveRDS = T, return_obj = T, returnFeats = T,
@@ -211,6 +241,37 @@ seu.obj <- dataVisUMAP(seu.obj = seu.obj, outDir = "./output/s3/", outName = "hV
                                      "IL7R", "ANPEP", "FLT3", "DLA-DRA", 
                                      "CD4", "MS4A1", "PPBP","HBM")
                        )
+
+###Analysis note (same as above note): 
+#on reproducible run, the clustering appeared to change and the Clus #s of the low qulaity cells may shift
+#NOTE: if looking to study specfic cell types presetned in the publication I highly reccomend using the processed data avaliable on GEO. Re-running the these first few steps will produce highly similar results, but not identical; likely due to the use of doubletfinder
+
+#to check QC parameters, use (and look for clusters with low nCount_RNA and low nFeature_RNA and high mt pct):
+features <- c("nCount_RNA", "nFeature_RNA", "percent.mt")
+p <- prettyFeats(seu.obj = seu.obj, nrow = 1, ncol = 3, features = features, 
+                 color = "black", order = F, pt.size = 0.0000001, title.size = 18)
+ggsave(paste("./output/QC_feats_2.png", sep = ""), width = 9, height = 3)
+
+#if still unclear which clusters are the low Q pops, try this:
+seu.processed <- readRDS("./output/s3/final_dataSet_HvO.rds") # download processed data from 
+
+highlight <- colnames(seu.obj)[!colnames(seu.obj) %in% colnames(seu.processed)]
+
+pi <- DimPlot(seu.obj,
+        reduction = "umap", 
+        group.by = "clusterID",
+        cols = "grey",
+        pt.size = 0.5,
+        label = F,
+        cells.highlight= highlight,
+        cols.highlight = "orchid",
+        order = F
+        #label.box = TRUE
+ )
+
+p <- formatUMAP(pi) + NoLegend()
+ggsave(paste("./output/lowQ_highlight_2.png", sep = ""), width =7, height = 7)
+
 
 #remove low quality clusters
 seu.obj <- subset(seu.obj,
@@ -429,7 +490,7 @@ ggsave(paste("./output/", outName, "/", outName, "_supp_ageMatched_freqPlots3_hv
 
 ### Fig Extra: during preeration of uploading data to UCSC cell browser I noticed clus38 was largely coming from OS dogs -- using the following code it is apprent that the cluster has pal contaminatoin and is not of interest -- as suggested through independednt reclustering
 p_volc <- btwnClusDEG(seu.obj = seu.obj, groupBy = "clusterID", idents.1 = "38", idents.2 = c("3","4","7","23"), bioRep = "name",
-                      padj_cutoff = 0.05, lfcCut = 0.58, minCells = 5, outDir = paste0("./output/", outName, "/"), 
+                      padj_cutoff = 0.01, lfcCut = 0.58, minCells = 5, outDir = paste0("./output/", outName, "/"), 
                       title = "c38_vs_cyto", idents.1_NAME = "c38", idents.2_NAME = "cyto", 
                       returnVolc = T, doLinDEG = F, paired = T, addLabs = "",lowFilter = T, dwnSam = F
                      )
@@ -1212,6 +1273,16 @@ seu.obj$clusterID_sub_clean <- factor(x = Idents(seu.obj), levels = sort(as.nume
 seu.obj.sub <- subset(seu.obj, subset = majorID_sub != "exclude")
 seu.obj.sub <- loadMeta(seu.obj = seu.obj.sub, metaFile = "./refColz.csv", groupBy = "orig.ident", metaAdd = "ageGroup2")
 
+
+
+### Create violin plots for key feats
+features = c("IL3RA", "PGLYRP2", "DDR2", 
+             "IGF1","RARRES2", "IGHM","IGKC",
+             "CADM1","DNASE1L3", "CLEC1B", 
+             "IL21R","IL4I1", "IDO1",
+             "CD1C","PID1","CD300H"
+            )
+
 # for testing purposes
 # seu.obj.sub$ageGroup2 <- factor(seu.obj.sub$ageGroup2, levels = c("Healthy", "Middle-aged_OS", "Old_OS"))
 # seu.obj.sub <- subset(seu.obj.sub,
@@ -1242,6 +1313,25 @@ vilnPlots(seu.obj = seu.obj.sub, groupBy = "clusterID_sub_clean", numOfFeats = 2
 p <- dotPlotBY_TYPE(seu_obj = seu.obj.sub, pwdTOvilnCSVoutput = "./output/fig5/viln/myeloid_hVoWadj_CLEAN_introns_gene_list.csv", groupBy = "clusterID_sub_clean",  database = "clfamiliaris_gene_ensembl", exlcude = "^ENSCAF", boxColor = "grey30", namedCols = namedCols
                           ) + theme(panel.background = element_rect(fill='white'))
 ggsave(paste("./output/", outName, "/", outName, "_myeloid_bigDots.png", sep = ""), width = 20, height = 12)
+
+
+### Fig Extra: DC viln plots
+pi <- VlnPlot(
+    object = seu.obj,
+    pt.size = 0,
+    same.y.lims = F,
+    group.by = "clusterID_sub_clean",
+    combine = T,
+    stack = T,
+    fill.by = "ident",
+    flip = T,
+    features = rev(features)
+        ) + NoLegend() + theme(axis.ticks = element_blank(),
+                               axis.text.y = element_blank(),
+                               axis.title.x = element_blank())
+
+#plot <- prettyViln(plot = pi, colorData = NULL, nrow = 2, ncol = 4)
+ggsave(paste("./output/", outName, "/", outName, "_selectViln.png", sep = ""), width = 10, height =6)
 
 
 ### Fig 5a: plot colorized umap
@@ -1619,7 +1709,9 @@ ggsave(paste("./output/", outName, "/", outName, "_umap_humanCellType.png", sep 
 
 ### Fig supp 9b: Create dendrogram
 metadata <- seu.obj@meta.data
-expression <- as.data.frame(t(seu.obj@assays$integrated@data)) #use sct count
+# expression <- as.data.frame(t(seu.obj@assays$RNA@data)) #log norm
+expression <- as.data.frame(t(seu.obj@assays$integrated@data)) #use integrated count
+# expression <- as.data.frame(t(seu.obj@assays$SCT@data)) #use sct count
 expression$anno_merge <- seu.obj@meta.data[rownames(expression),]$type
 
 # avg_expression <- expression %>% group_by(anno_merge) %>% summarise_each(mean) %>% as.data.frame()
@@ -2295,3 +2387,6 @@ linDEG(seu.obj = seu.obj.MatchedvH, threshold = 0.5, thresLine = T, groupBy = "c
 #logging data
 system("cat /pl/active/dow_lab/dylan/repos/K9-PBMC-scRNAseq/analysisCode/customFunctions.R")
 sessionInfo()
+
+
+
