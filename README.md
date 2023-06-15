@@ -31,7 +31,7 @@ If you have any questions or concerns, please submit an issue, contact the corre
 The proccessed dataset is avaliable for browsing via the UCSC Cell Browser portal.
 Using the portal you can explore feature expression throughout the dataset as well as obtain the transcriptomic signatures of each cell type though an interactive webpage.
 
-Note: the UCSC Cell Browser dataset is being updated to include all dataset presented in the manuscript. Additionally, the cell type signatures on the Browser need to be updated. Once updated this note will be removed. 
+Note: the cell type gene lists on UCSC Cell Browser are ordered by P value in descending order by default, you can toggle it to ascending to get the enriched markers at the top of the list. I will update if/when the default setting is modified. 
 
 Link to the dataset: https://canine-leukocyte-atlas.cells.ucsc.edu
 
