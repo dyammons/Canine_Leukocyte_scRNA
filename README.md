@@ -264,10 +264,10 @@ The concept of the AddModuleScore() function is similar to GSEA, but also distin
 
 ```r
 #load in the reference file from supplemental data
-ref.df <- read.csv("supplementalData_4", row.names = 1, header = T)
+ref.df <- read.csv("supplementalData_4.csv", header = T)
 
 #organize the data
-modulez <- split(datas$gene_symbol, datas$cellType_l2)
+modulez <- split(ref.df$gene, ref.df$cellType_l2)
 
 #complete module scoring
 seu.obj <- AddModuleScore(seu.obj,
