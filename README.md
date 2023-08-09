@@ -7,6 +7,8 @@ If you use our raw/processed data, extract data using the UCSC Cell Browser port
 > Ammons DT, Harris RA, Hopkins LS, Kurihara J, Weishaar K and Dow S (2023) A single-cell RNA sequencing atlas of circulating leukocytes from healthy and
 osteosarcoma affected dogs. Front. Immunol. 14:1162700. doi: 10.3389/fimmu.2023.1162700
 
+### NEWS: Interested in more canine scRNA data? Check out our [naive osteosarcoma tumor atlas pre-print](https://www.researchsquare.com/article/rs-3232360/v1).
+
 ## Repository goals: 
 - provide a resource to make the data generated from this project accessible
 - enable reproducible/transparent data reporting
