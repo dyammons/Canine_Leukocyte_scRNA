@@ -1,7 +1,7 @@
 # Canine_Leukocyte_scRNA
 [![DOI](https://zenodo.org/badge/546752777.svg)](https://zenodo.org/badge/latestdoi/546752777)
 
-### NEWS: Interested in more canine scRNA data? Check out our [naive osteosarcoma tumor atlas pre-print](https://www.researchsquare.com/article/rs-3232360/v1).
+#### NEWS: Interested in more canine scRNA data? Check out our [naive osteosarcoma scRNA-seq atlas](https://www.nature.com/articles/s42003-024-06182-w) and the [associated GitHub page](https://github.com/dyammons/canine_osteosarcoma_atlas).
 
 This GitHub repository contains all the analysis code used in, "A single-cell RNA sequencing atlas of circulating leukocytes from healthy and osteosarcoma affected dogs."
 
@@ -32,8 +32,6 @@ If you have any questions or concerns, please submit an issue, contact the corre
 
 The proccessed dataset is avaliable for browsing via the UCSC Cell Browser portal.
 Using the portal you can explore feature expression throughout the dataset as well as obtain the transcriptomic signatures of each cell type though an interactive webpage.
-
-Note: the cell type gene lists on UCSC Cell Browser are ordered by P value in descending order by default, you can toggle it to ascending to get the enriched markers at the top of the list. I will update if/when the default setting is modified. 
 
 Link to the dataset: https://canine-leukocyte-atlas.cells.ucsc.edu
 
@@ -156,7 +154,7 @@ Cell markers lists were curated using 7 healthy canine leukocyte samples. The to
 ### 3. Using the data to complete reference mapping
 Reference mapping is useful tool to facilitate the identification of cell types in single cell datasets. The approach described here uses Seurat functions to identify anchors between a query dataset (external/personal data) and the reference datasets generated in this study. The default approach describes how to use the healthy only dataset, but it will also work with the combined dataset if you load that file in as the reference.
 
-Before running the reference mapping code, a Seurat object need to be preprocessed and stored as an object named `seu.obj`.
+Before running the reference mapping code, a Seurat object need to be preprocessed using SCT normalization (+/- integration) and stored as an object named `seu.obj`. If you wish to use the reference on log normalized data, please see the hidden code below.
 ```r
 #set the path to the location in which the reference file is saved
 reference <- readRDS(file = "../../k9_PBMC_scRNA/analysis/output/s3/final_dataSet_HvO.rds")
@@ -191,6 +189,38 @@ pi <- DimPlot(seu.obj,
 ggsave("./output/referenceMap.png", width = 7, height = 7)
 ```
 
+<details><summary>If using log normalized data try this (click me!)</summary>
+<p>
+
+```r
+#set the path to the location in which the reference file is saved
+reference <- readRDS(file = "../../k9_PBMC_scRNA/analysis/output/s3/final_dataSet_HvO.rds")
+
+#find conserved anchors with query and reference
+anchors <- FindTransferAnchors(
+    reference = reference,
+    query = seu.obj,
+    reference.reduction = "pca",
+    dims= 1:30
+)
+
+#select meta.data slot to use for label transfer -- change refdata value to use alternate labels (i.e., refdata = reference$celltype.l1)
+predictions <- TransferData(
+    anchorset = anchors,
+    refdata = reference$celltype.l3,
+    dims = 1:30
+)
+seu.obj <- AddMetaData(seu.obj, metadata = predictions)
+
+#generate and save the image
+pi <- DimPlot(seu.obj, reduction = "umap", group.by = "predicted.id", 
+              pt.size = 0.25, label = T, label.box = T, shuffle = F)
+ggsave("./output/referenceMap.png", width = 7, height = 7)
+```
+
+</p>
+</details>
+
 ### 4. Gene set enrichment analysis
 
 The data generated from this work have the potential to provide supporting evidence to evaluate/confirm the cell identity of sorted bulk RNA sequencing dataset. One approach to do this is to use gene set enrichment analysis (GSEA) with the terms representing the cell type identified in our dataset.
@@ -223,7 +253,7 @@ df.list <- list()
 for (cluster in clusters) {
     clus_sub <- clus.markers[clus.markers$cluster == cluster, ]
 
-    #run enricher
+    #run clusterProfiler::enricher
     enriched <- as.data.frame(clusterProfiler::enricher(gene = clus_sub$gene, TERM2GENE = datas, pvalueCutoff = 1))
     if(nrow(enriched) > 0){
         enriched$cluster <- cluster
